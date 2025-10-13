@@ -179,7 +179,8 @@
                                         @if($lab->fasilitas->isNotEmpty())
                                             <ul class="list-disc list-inside text-sm text-gray-600">
                                                 @foreach($lab->fasilitas as $fas)
-                                                    <span>{{ $fas->jumlah }} {{ $fas->barang->nama_barang ?? 'Barang tidak ditemukan' }}, </span>
+                                                    <span>{{ $fas->jumlah }}
+                                                        {{ $fas->barang->nama_barang ?? 'Barang tidak ditemukan' }}, </span>
                                                 @endforeach
                                             </ul>
                                         @else
@@ -194,10 +195,10 @@
                             </p>
 
                             <div class="mt-6 flex space-x-3">
-                                <button
-                                    class="flex-1 bg-primary text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-primary-dark">
+                                <a href="{{ route('detail-laboratorium') }}"
+                                    class="flex-1 bg-primary text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-primary-dark inline-flex items-center justify-center">
                                     <i class="fas fa-eye mr-1"></i> Detail
-                                </button>
+                                </a>
 
                                 @if(Auth::check() && Auth::user()->isAdmin())
                                     <button
