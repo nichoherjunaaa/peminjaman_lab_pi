@@ -1,16 +1,20 @@
 <?php
 
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 // Routes utama
 Route::get('/', function () {
-    return view('pages.home');
-});
-Route::get('/login', function () {
     return view('pages.login');
 });
 
-Route::get('/peminjaman', function () {
+Route::post('/login', [UserController::class, 'login'])->name('login.post');
+Route::post('/logout', [UserController::class, 'logout'])->name('logout');
+Route::get('/home', function () {
+    return view('pages.home');
+});
+
+Route::get('/booking', function () {
     return view('pages.peminjaman');
 });
 Route::get('/create', function () {

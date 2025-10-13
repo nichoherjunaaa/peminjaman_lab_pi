@@ -114,10 +114,11 @@
                     <p class="text-gray-600">Silakan masuk dengan username dan password Anda</p>
                 </div>
 
-                <form id="loginForm" class="space-y-6">
+                <form id="loginForm" class="space-y-6" action="{{ route("login.post") }}" method="POST">
+                    @csrf
                     <!-- Username Field -->
                     <div class="relative">
-                        <input type="text" id="username"
+                        <input type="text" id="username" name="username"
                             class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300"
                             placeholder=" " autocomplete="username" required>
                         <label for="username" class="floating-label absolute left-4 top-3 text-gray-500 bg-white px-1">
@@ -127,7 +128,7 @@
 
                     <!-- Password Field -->
                     <div class="relative">
-                        <input type="password" id="password"
+                        <input type="password" id="password" name="password"
                             class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300"
                             placeholder=" " autocomplete="current-password" required>
                         <label for="password" class="floating-label absolute left-4 top-3 text-gray-500 bg-white px-1">
@@ -205,121 +206,121 @@
             });
 
             // Form submission
-            const loginForm = document.getElementById('loginForm');
-            const errorMessage = document.getElementById('errorMessage');
-            const loadingOverlay = document.getElementById('loadingOverlay');
+            // const loginForm = document.getElementById('loginForm');
+            // const errorMessage = document.getElementById('errorMessage');
+            // const loadingOverlay = document.getElementById('loadingOverlay');
 
-            loginForm.addEventListener('submit', function (e) {
-                e.preventDefault();
+            // loginForm.addEventListener('submit', function (e) {
+            //     e.preventDefault();
 
-                const username = document.getElementById('username').value;
-                const password = document.getElementById('password').value;
+            //     const username = document.getElementById('username').value;
+            //     const password = document.getElementById('password').value;
 
-                // Simple validation
-                if (!username || !password) {
-                    showError('Harap isi username dan password.');
-                    return;
-                }
+            //     // Simple validation
+            //     if (!username || !password) {
+            //         showError('Harap isi username dan password.');
+            //         return;
+            //     }
 
-                // Show loading
-                loadingOverlay.classList.remove('hidden');
+            //     // Show loading
+            //     loadingOverlay.classList.remove('hidden');
 
-                // Simulate API call
-                setTimeout(() => {
-                    loadingOverlay.classList.add('hidden');
+            //     // Simulate API call
+            //     setTimeout(() => {
+            //         loadingOverlay.classList.add('hidden');
 
-                    // Demo credentials
-                    if ((username === 'admin' && password === 'admin123') ||
-                        (username === 'dosen' && password === 'dosen123') ||
-                        (username === 'mahasiswa' && password === 'mahasiswa123')) {
-                        // Successful login - redirect based on role
-                        let redirectPage = 'beranda.html';
+            //         // Demo credentials
+            //         if ((username === 'admin' && password === 'admin123') ||
+            //             (username === 'dosen' && password === 'dosen123') ||
+            //             (username === 'mahasiswa' && password === 'mahasiswa123')) {
+            //             // Successful login - redirect based on role
+            //             let redirectPage = 'beranda.html';
 
-                        if (username === 'admin') {
-                            localStorage.setItem('userRole', 'admin');
-                            localStorage.setItem('userName', 'Administrator');
-                        } else if (username === 'dosen') {
-                            localStorage.setItem('userRole', 'dosen');
-                            localStorage.setItem('userName', 'Dr. Ahmad Wijaya');
-                            redirectPage = 'peminjaman.html';
-                        } else if (username === 'mahasiswa') {
-                            localStorage.setItem('userRole', 'mahasiswa');
-                            localStorage.setItem('userName', 'Budi Santoso');
-                            redirectPage = 'laboratorium.html';
-                        }
+            //             if (username === 'admin') {
+            //                 localStorage.setItem('userRole', 'admin');
+            //                 localStorage.setItem('userName', 'Administrator');
+            //             } else if (username === 'dosen') {
+            //                 localStorage.setItem('userRole', 'dosen');
+            //                 localStorage.setItem('userName', 'Dr. Ahmad Wijaya');
+            //                 redirectPage = 'peminjaman.html';
+            //             } else if (username === 'mahasiswa') {
+            //                 localStorage.setItem('userRole', 'mahasiswa');
+            //                 localStorage.setItem('userName', 'Budi Santoso');
+            //                 redirectPage = 'laboratorium.html';
+            //             }
 
-                        // Store login time
-                        localStorage.setItem('loginTime', new Date().toISOString());
+            //             // Store login time
+            //             localStorage.setItem('loginTime', new Date().toISOString());
 
-                        // Redirect to appropriate page
-                        window.location.href = redirectPage;
-                    } else {
-                        showError('Username atau password salah. Silakan coba lagi.');
-                    }
-                }, 1500);
-            });
+            //             // Redirect to appropriate page
+            //             window.location.href = redirectPage;
+            //         } else {
+            //             showError('Username atau password salah. Silakan coba lagi.');
+            //         }
+            //     }, 1500);
+            // });
 
-            function showError(message) {
-                document.getElementById('errorText').textContent = message;
-                errorMessage.classList.remove('hidden');
+            // function showError(message) {
+            //     document.getElementById('errorText').textContent = message;
+            //     errorMessage.classList.remove('hidden');
 
-                // Auto hide error after 5 seconds
-                setTimeout(() => {
-                    errorMessage.classList.add('hidden');
-                }, 5000);
-            }
+            //     // Auto hide error after 5 seconds
+            //     setTimeout(() => {
+            //         errorMessage.classList.add('hidden');
+            //     }, 5000);
+            // }
 
-            // Add floating label functionality
-            const inputFields = document.querySelectorAll('.input-field');
-            inputFields.forEach(input => {
-                input.addEventListener('focus', function () {
-                    this.parentElement.classList.add('focused');
-                });
+            // // Add floating label functionality
+            // const inputFields = document.querySelectorAll('.input-field');
+            // inputFields.forEach(input => {
+            //     input.addEventListener('focus', function () {
+            //         this.parentElement.classList.add('focused');
+            //     });
 
-                input.addEventListener('blur', function () {
-                    if (!this.value) {
-                        this.parentElement.classList.remove('focused');
-                    }
-                });
+            //     input.addEventListener('blur', function () {
+            //         if (!this.value) {
+            //             this.parentElement.classList.remove('focused');
+            //         }
+            //     });
 
-                // Check on page load if inputs have values
-                if (input.value) {
-                    input.parentElement.classList.add('focused');
-                }
-            });
+            //     // Check on page load if inputs have values
+            //     if (input.value) {
+            //         input.parentElement.classList.add('focused');
+            //     }
+            // });
 
-            // Auto-fill demo credentials for testing
-            const urlParams = new URLSearchParams(window.location.search);
-            const demo = urlParams.get('demo');
+            // // Auto-fill demo credentials for testing
+            // const urlParams = new URLSearchParams(window.location.search);
+            // const demo = urlParams.get('demo');
 
-            if (demo === 'admin') {
-                document.getElementById('username').value = 'admin';
-                document.getElementById('password').value = 'admin123';
-            } else if (demo === 'dosen') {
-                document.getElementById('username').value = 'dosen';
-                document.getElementById('password').value = 'dosen123';
-            } else if (demo === 'mahasiswa') {
-                document.getElementById('username').value = 'mahasiswa';
-                document.getElementById('password').value = 'mahasiswa123';
-            }
+            // if (demo === 'admin') {
+            //     document.getElementById('username').value = 'admin';
+            //     document.getElementById('password').value = 'admin123';
+            // } else if (demo === 'dosen') {
+            //     document.getElementById('username').value = 'dosen';
+            //     document.getElementById('password').value = 'dosen123';
+            // } else if (demo === 'mahasiswa') {
+            //     document.getElementById('username').value = 'mahasiswa';
+            //     document.getElementById('password').value = 'mahasiswa123';
+            // }
 
-            // Check if user is already logged in
-            if (localStorage.getItem('userRole')) {
-                // User is already logged in, redirect to appropriate page
-                let redirectPage = 'beranda.html';
-                const userRole = localStorage.getItem('userRole');
+            // // Check if user is already logged in
+            // if (localStorage.getItem('userRole')) {
+            //     // User is already logged in, redirect to appropriate page
+            //     let redirectPage = 'beranda.html';
+            //     const userRole = localStorage.getItem('userRole');
 
-                if (userRole === 'dosen') {
-                    redirectPage = 'peminjaman.html';
-                } else if (userRole === 'mahasiswa') {
-                    redirectPage = 'laboratorium.html';
-                }
+            //     if (userRole === 'dosen') {
+            //         redirectPage = 'peminjaman.html';
+            //     } else if (userRole === 'mahasiswa') {
+            //         redirectPage = 'laboratorium.html';
+            //     }
 
-                // Show message and redirect
-                setTimeout(() => {
-                    window.location.href = redirectPage;
-                }, 1000);
-            }
+            //     // Show message and redirect
+            //     setTimeout(() => {
+            //         window.location.href = redirectPage;
+            //     }, 1000);
+            // }
         });
     </script>
 </body>
