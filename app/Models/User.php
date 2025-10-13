@@ -31,19 +31,16 @@ class User extends Authenticatable
         $this->attributes['password'] = Hash::make($value);
     }
 
-    // 🔗 Relasi opsional ke tabel Mahasiswa
     public function mahasiswa()
     {
         return $this->hasOne(Mahasiswa::class, 'nim', 'username');
     }
 
-    // 🔗 Relasi opsional ke tabel Dosen
     public function dosen()
     {
         return $this->hasOne(Dosen::class, 'nip', 'username');
     }
 
-    // ✅ Helper untuk cek role
     public function isMahasiswa(): bool
     {
         return $this->role === 'mahasiswa';

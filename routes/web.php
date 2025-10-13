@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LaboratoriumController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -14,15 +15,15 @@ Route::get('/home', function () {
     return view('pages.home');
 });
 
+
+Route::get('/laboratorium', [LaboratoriumController::class, 'index'])->name('laboratorium.index');
+
+
 Route::get('/booking', function () {
     return view('pages.peminjaman');
 });
 Route::get('/create', function () {
     return view('pages.ajuan');
-});
-
-Route::get('/laboratorium', function () {
-    return view('pages.laboratorium');
 });
 
 Route::get('/riwayat', function () {

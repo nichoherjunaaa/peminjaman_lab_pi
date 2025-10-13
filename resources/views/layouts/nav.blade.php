@@ -17,13 +17,13 @@
 
             <!-- Navigation Links -->
             <div class="flex space-x-1">
-                <a href="{{ url('/') }}"
-                    class="nav-item {{ request()->is('/') ? 'active' : '' }} px-4 py-3 text-sm font-medium text-white rounded-lg flex items-center">
+                <a href="{{ url('/home') }}"
+                    class="nav-item {{ request()->is('home') ? 'active' : '' }} px-4 py-3 text-sm font-medium text-white rounded-lg flex items-center">
                     <i class="fas fa-home mr-2 w-5 text-center"></i>
                     Beranda
                 </a>
                 <a href="{{ url('/booking') }}"
-                    class="nav-item {{ request()->is('peminjaman') ? 'active' : '' }} px-4 py-3 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200 flex items-center">
+                    class="nav-item {{ request()->is('booking') ? 'active' : '' }} px-4 py-3 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200 flex items-center">
                     <i class="fas fa-calendar-alt mr-2 w-5 text-center"></i>
                     Peminjaman
                 </a>
@@ -48,16 +48,34 @@
                     <span class="absolute top-1 right-1 w-2 h-2 bg-secondary rounded-full"></span>
                 </button>
 
+                @php
+                    use Illuminate\Support\Facades\Auth;
+
+                    $user = Auth::user();
+                    $nama = 'Tidak diketahui';
+
+                    if ($user) {
+                        if ($user->isMahasiswa() && $user->mahasiswa) {
+                            $nama = $user->mahasiswa->nama;
+                        } elseif ($user->isDosen() && $user->dosen) {
+                            $nama = $user->dosen->nama;
+                        } else{
+                            $nama = 'Administrator';
+                        }
+                    }
+                @endphp
                 <!-- User Profile -->
                 <div class="relative group">
                     <button
                         class="flex items-center space-x-3 text-sm font-medium text-white hover:text-white transition-colors duration-200">
                         <div class="w-10 h-10 bg-secondary rounded-full flex items-center justify-center">
-                            <span class="text-white font-bold">A</span>
+                            <span class="text-white font-bold">
+                                <i class="fas fa-user"></i>
+                            </span>
                         </div>
                         <div class="text-left hidden lg:block">
-                            <p class="font-medium text-white">Admin</p>
-                            <p class="text-xs text-white/80">Administrator</p>
+                            <p class="font-medium text-white">{{ $nama }}</p>
+                            <p class="text-xs text-white/80 capitalize">{{ $user->role }}</p>
                         </div>
                         <i class="fas fa-chevron-down text-xs text-white/70"></i>
                     </button>
@@ -77,7 +95,8 @@
                                 Pengaturan
                             </a>
                             <div class="border-t border-gray-100 my-1"></div>
-                            <form action="{{ url('/logout') }}" method="POST" class="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-gray-50 transition-colors duration-200">
+                            <form action="{{ url('/logout') }}" method="POST"
+                                class="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-gray-50 transition-colors duration-200">
                                 @csrf
                                 <button type="submit">
                                     <i class="fas fa-sign-out-alt mr-3 w-4 text-center"></i>

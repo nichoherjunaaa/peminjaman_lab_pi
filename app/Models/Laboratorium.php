@@ -21,8 +21,9 @@ class Laboratorium extends Model
     ];
     public function fasilitas()
     {
-        return $this->hasMany(Fasilitas::class, 'id_laboratorium');
+        return $this->hasMany(Fasilitas::class, 'id_laboratorium', 'id_laboratorium');
     }
+
 
     public function peminjaman()
     {

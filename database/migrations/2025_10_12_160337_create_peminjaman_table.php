@@ -17,7 +17,6 @@ return new class extends Migration
             $table->foreignId('id_dosen')->nullable()->constrained('dosen', 'id_dosen')->onDelete('set null');
             $table->foreignId('id_laboratorium')->constrained('laboratorium', 'id_laboratorium')->onDelete('cascade');
             $table->foreignId('id_jadwal')->nullable()->constrained('jadwal', 'id_jadwal')->onDelete('set null');
-            $table->foreignId('id_admin')->nullable()->constrained('admin', 'id_admin')->onDelete('set null');
             $table->date('tanggal');
             $table->string('nama_kegiatan', 150);
             $table->text('keperluan')->nullable();

@@ -12,6 +12,7 @@
                 <p class="mt-2 text-gray-600">Riwayat semua peminjaman laboratorium</p>
             </div>
             <div class="mt-4 sm:mt-0 flex space-x-3">
+                @if(Auth::check() && Auth::user()->isAdmin())
                 <button
                     class="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg flex items-center hover:bg-gray-50">
                     <i class="fas fa-download mr-2"></i>
@@ -21,6 +22,7 @@
                     <i class="fas fa-print mr-2"></i>
                     Cetak
                 </button>
+                @endif
             </div>
         </div>
 

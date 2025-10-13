@@ -21,21 +21,21 @@ class MahasiswaSeeder extends Seeder
                 'nama' => 'Nicho Herjuna',
                 'prodi' => 'Teknik Informatika',
                 'email' => 'nicho@example.com',
-                'no_hp' => '081234567890',
+                'nomor_telepon' => '081234567890',
             ],
             [
                 'nim' => '2251002',
                 'nama' => 'Siti Rahmawati',
                 'prodi' => 'Sistem Informasi',
                 'email' => 'siti.rahma@example.com',
-                'no_hp' => '081234567891',
+                'nomor_telepon' => '081234567891',
             ],
             [
                 'nim' => '2251003',
                 'nama' => 'Andi Pratama',
                 'prodi' => 'Teknik Komputer',
                 'email' => 'andi.pratama@example.com',
-                'no_hp' => '081234567892',
+                'nomor_telepon' => '081234567892',
             ],
         ];
 
