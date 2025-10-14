@@ -102,7 +102,7 @@
 
                 <div class="mt-12 border-t border-white/20 pt-6">
                     <p class="text-white/70 text-sm">
-                        &copy; 2025 Universitas Sanata Dharma. All rights reserved.
+                        &copy; 2025 Kelompok 3 Proyek Informatika. All rights reserved.
                     </p>
                 </div>
             </div>
