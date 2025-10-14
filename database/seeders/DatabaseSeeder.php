@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             MahasiswaSeeder::class,
             BarangSeeder::class,
             LaboratoriumSeeder::class
+
         ]);
     }
 }

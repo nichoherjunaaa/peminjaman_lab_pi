@@ -12,4 +12,12 @@ class PeminjamanController extends Controller
         $laboratorium = Laboratorium::all();
         return view('pages.ajuan', compact('laboratorium'));
     }
+    public function update(Request $request){
+        $validate == $request->validate([
+            'id'=>'required|exists:peminjaman_lab,id',
+            'status'=>'required|in:setuju,tolak',
+            'alasan'=>'nullable|string',
+        ]);
+    }
 }
+
