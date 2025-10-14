@@ -21,6 +21,9 @@ Route::get('/laboratorium/1', function () {
 
 Route::get('/laboratorium', [LaboratoriumController::class, 'index'])->name('laboratorium.index');
 
+Route::get('/booking/1', function(){
+    return view('pages.detail_pengajuan');
+}) ->name('detail-peminjaman');
 
 Route::get('/booking', function () {
     return view('pages.peminjaman');
@@ -45,6 +48,7 @@ Route::get('/pengaturan', function () {
 Route::get('/test-404', function () {
     abort(404);
 });
+
 
 // Fallback route - harus di paling bawah
 Route::fallback(function () {
