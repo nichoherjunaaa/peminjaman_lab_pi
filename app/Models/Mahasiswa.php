@@ -22,7 +22,7 @@ class Mahasiswa extends Model
 
     public function peminjaman()
     {
-        return $this->hasMany(Peminjaman::class, 'id_mahasiswa');
+        return $this->morphMany(Peminjaman::class, 'peminjam');
     }
 
     public function user()

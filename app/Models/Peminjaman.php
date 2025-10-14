@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,28 +13,27 @@ class Peminjaman extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'id_mahasiswa',
-        'id_dosen',
+        'id_peminjam',
+        'peminjam_type',
         'id_laboratorium',
         'id_jadwal',
         'id_admin',
         'tanggal',
+        'jam_mulai',
+        'jam_selesai',
         'nama_kegiatan',
         'keperluan',
         'status',
         'created_at',
     ];
-    public function mahasiswa()
+
+    public function peminjam()
     {
-        return $this->belongsTo(Mahasiswa::class, 'id_mahasiswa');
+        return $this->morphTo(__FUNCTION__, 'peminjam_type', 'id_peminjam');
     }
 
-    public function dosen()
-    {
-        return $this->belongsTo(Dosen::class, 'id_dosen');
-    }
 
-    public function lab()
+    public function laboratorium()
     {
         return $this->belongsTo(Laboratorium::class, 'id_laboratorium');
     }
@@ -45,8 +43,8 @@ class Peminjaman extends Model
         return $this->belongsTo(Jadwal::class, 'id_jadwal');
     }
 
-    public function admin()
+    public function user()
     {
-        return $this->belongsTo(Admin::class, 'id_admin');
+        return $this->belongsTo(User::class, 'id_user');
     }
 }

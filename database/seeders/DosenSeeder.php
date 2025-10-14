@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Dosen;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -15,6 +16,7 @@ class DosenSeeder extends Seeder
     {
         $dosen = [
             [
+                'id_dosen' => 1,
                 'nip' => '235314121',
                 'nama' => 'Alfeus Galih',
                 'email' => 'alfeusdosen@gmail.com',
@@ -22,11 +24,13 @@ class DosenSeeder extends Seeder
             ],
         ];
 
-        foreach($dosen as $data) {
+        foreach ($dosen as $data) {
+            $dosen = Dosen::create($data);
+
             User::create([
                 'username' => $data['nip'],
-                'password' => "admin123",
-                'role' => 'admin',
+                'password' => '123456',
+                'role' => 'dosen',
             ]);
         }
     }

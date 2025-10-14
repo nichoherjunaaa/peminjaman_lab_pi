@@ -42,7 +42,8 @@
                                     <h1 class="text-3xl font-bold text-gray-900">{{ $lab->nama_laboratorium }}</h1>
                                     <p class="mt-2 text-gray-600">{{ $lab->lokasi }}</p>
                                     <div class="mt-3 flex items-center space-x-3">
-                                        <span class="capitalize px-3 py-1 text-sm font-semibold rounded-full status-available">
+                                        <span
+                                            class="capitalize px-3 py-1 text-sm font-semibold rounded-full status-available">
                                             <i class="fas fa-check-circle mr-1"></i>
                                             {{ $lab->status }}
                                         </span>

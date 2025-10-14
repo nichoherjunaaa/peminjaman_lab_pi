@@ -10,7 +10,7 @@ class Dosen extends Model
     use HasFactory;
     protected $table = 'dosen';
     protected $primaryKey = 'id_dosen';
-    protected $timestamps = false;
+    public $timestamps = false;
     protected $fillable = [
         'nip',
         'nama',
@@ -20,7 +20,7 @@ class Dosen extends Model
 
     public function peminjaman()
     {
-        return $this->hasMany(Peminjaman::class, 'id_dosen');
+        return $this->morphMany(Peminjaman::class, 'peminjam');
     }
 
     public function user()

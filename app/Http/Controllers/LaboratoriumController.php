@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Laboratorium;
-use Illuminate\Http\Request;
 
 class LaboratoriumController extends Controller
 {
@@ -30,5 +29,32 @@ class LaboratoriumController extends Controller
         $lab->delete();
         return response()->json(['success' => true]);
     }
+
+    public function show_booking($id)
+    {
+        $lab = Laboratorium::with(['peminjaman.peminjam'])->findOrFail($id);
+
+        // Bentuk data agar sesuai format bookingData di frontend
+        $data = $lab->peminjaman
+            ->groupBy(function ($item) {
+                return \Carbon\Carbon::parse($item->tanggal)->format('Y-m-d');
+            })
+            ->map(function ($peminjamanList) use ($lab) {
+                return $peminjamanList->map(function ($p) use ($lab) {
+                    return [
+                        'id' => $p->id_peminjaman,
+                        'lab' => $lab->nama_laboratorium,
+                        'kegiatan' => $p->nama_kegiatan,
+                        'waktu' => \Carbon\Carbon::parse($p->jam_mulai)->format('H:i') . ' - ' . \Carbon\Carbon::parse($p->jam_selesai)->format('H:i'),
+                        'peminjam' => $p->peminjam->nama ?? 'Tidak diketahui',
+                        'status' => strtolower($p->status),
+                        'jenis' => strtolower(class_basename($p->peminjam_type)),
+                    ];
+                });
+            });
+
+        return response()->json($data);
+    }
+
 }
 

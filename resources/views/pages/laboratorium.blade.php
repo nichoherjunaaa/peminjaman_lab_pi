@@ -210,11 +210,11 @@
                                         class="flex-1 border border-primary text-primary text-center py-2 px-4 rounded-lg text-sm font-medium hover:bg-primary hover:text-white">
                                         <i class="fas fa-edit mr-1"></i> Edit
                                     </a>
+                                    <a href="{{ route('delete.laboratorium', $lab->id_laboratorium) }}"
+                                        class="btn-delete flex-1 bg-primary text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-primary-dark inline-flex items-center justify-center">
+                                        <i class="fas fa-trash mr-1"></i> Hapus
+                                    </a>
                                 @endif
-                                <a href="{{ route('delete.laboratorium', $lab->id_laboratorium) }}"
-                                    class="btn-delete flex-1 bg-primary text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-primary-dark inline-flex items-center justify-center">
-                                    <i class="fas fa-trash mr-1"></i> Hapus
-                                </a>
                             </div>
                         </div>
                     </div>
@@ -271,8 +271,7 @@
                             class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
                             Batal
                         </button>
-                        <button type="button" id="confirmDelete"
-                            class="px-4 py-2 bg-primary text-white rounded-lg">
+                        <button type="button" id="confirmDelete" class="px-4 py-2 bg-primary text-white rounded-lg">
                             Hapus
                         </button>
                     </div>

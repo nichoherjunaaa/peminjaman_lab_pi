@@ -63,7 +63,6 @@
 <body class="login-container flex items-center justify-center p-4">
     <div class="container mx-auto max-w-6xl">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-            <!-- Left Side - Branding & Info -->
             <div class="text-white text-center lg:text-left">
                 <div class="mb-8 pulse-animation">
                     <div

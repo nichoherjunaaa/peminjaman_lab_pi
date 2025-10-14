@@ -51,7 +51,8 @@
 
             <!-- Form Peminjaman -->
             <div class="bg-white p-6 rounded-lg shadow">
-                <form id="peminjamanForm">
+                <form id="peminjamanForm" action="{{ route('peminjaman.store') }}" method="POST">
+                    @csrf
                     <!-- Step 1: Informasi Dasar -->
                     <div class="form-step active" id="step1">
                         <h2 class="text-lg font-semibold text-gray-900 mb-4">Informasi Dasar Peminjaman</h2>
@@ -61,7 +62,7 @@
                             <div>
                                 <label for="namaKegiatan" class="block text-sm font-medium text-gray-700 mb-1">Nama Kegiatan
                                     *</label>
-                                <input type="text" id="namaKegiatan" name="namaKegiatan"
+                                <input type="text" id="namaKegiatan" name="nama_kegiatan"
                                     class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                                     placeholder="Masukkan nama kegiatan" required>
                                 <p class="mt-1 text-xs text-gray-500">Contoh: Praktikum Komputer Dasar, Workshop
@@ -72,12 +73,12 @@
                             <div>
                                 <label for="laboratorium" class="block text-sm font-medium text-gray-700 mb-1">Laboratorium
                                     *</label>
-                                <select id="laboratorium" name="laboratorium"
+                                <select id="laboratorium" name="id_laboratorium"
                                     class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                                     required>
                                     <option value="">Pilih Laboratorium</option>
                                     @foreach($laboratorium as $lab)
-                                        <option value="{{ $lab->id }}">
+                                        <option value="{{ $lab->id_laboratorium }}">
                                             {{ $lab->nama_laboratorium }} - {{ $lab->lokasi }}
                                         </option>
                                     @endforeach
@@ -88,7 +89,7 @@
                             <div>
                                 <label for="jenisKegiatan" class="block text-sm font-medium text-gray-700 mb-1">Jenis
                                     Kegiatan *</label>
-                                <select id="jenisKegiatan" name="jenisKegiatan"
+                                <select id="jenisKegiatan" name="jenis_kegiatan"
                                     class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                                     required>
                                     <option value="">Pilih Jenis Kegiatan</option>
@@ -137,7 +138,7 @@
                             <div>
                                 <label for="tanggalPeminjaman" class="block text-sm font-medium text-gray-700 mb-1">Tanggal
                                     Peminjaman *</label>
-                                <input type="date" id="tanggalPeminjaman" name="tanggalPeminjaman"
+                                <input type="date" id="tanggalPeminjaman" name="tanggal"
                                     class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                                     required>
                             </div>
@@ -146,7 +147,7 @@
                             <div>
                                 <label for="waktuMulai" class="block text-sm font-medium text-gray-700 mb-1">Waktu Mulai
                                     *</label>
-                                <input type="time" id="waktuMulai" name="waktuMulai"
+                                <input type="time" id="waktuMulai" name="jam_mulai"
                                     class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                                     required>
                             </div>
@@ -155,7 +156,7 @@
                             <div>
                                 <label for="waktuSelesai" class="block text-sm font-medium text-gray-700 mb-1">Waktu Selesai
                                     *</label>
-                                <input type="time" id="waktuSelesai" name="waktuSelesai"
+                                <input type="time" id="waktuSelesai" name="jam_selesai"
                                     class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                                     required>
                             </div>
