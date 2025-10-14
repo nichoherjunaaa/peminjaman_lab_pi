@@ -27,13 +27,6 @@
 <body class="bg-gray-50">
     <div class="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
         <div class="max-w-md w-full space-y-8 text-center">
-            <!-- Logo -->
-            <div class="flex justify-center mb-8">
-                <div class="w-16 h-16 bg-white rounded-lg shadow-md flex items-center justify-center">
-                    <img src="{{ asset('images/USD500.png') }}" alt="USD Logo" class="w-12 h-12">
-                </div>
-            </div>
-
             <!-- Error Content -->
             <div class="bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
                 <!-- Icon -->
@@ -57,7 +50,8 @@
                 <div class="space-y-4">
                     <a href="{{ url('/') }}"
                         class="w-full flex justify-center items-center px-6 py-3 bg-primary hover:bg-primary/90 text-white font-medium rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg">
-                        <i class="fas fa-home mr-2"></i>
+                        <img src="{{ asset('images/USD500.png') }}" alt="USD Logo" class="w-8 h-8 mr-2">
+                        {{-- <i class="fas fa-home mr-2"></i> --}}
                         Kembali ke Beranda
                     </a>
 

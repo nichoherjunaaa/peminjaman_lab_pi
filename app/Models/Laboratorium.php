@@ -10,7 +10,7 @@ class Laboratorium extends Model
     use HasFactory;
 
     protected $table = 'laboratorium';
-    protected $primaryKey = 'id_lab';
+    protected $primaryKey = 'id_laboratorium';
     public $timestamps = false;
 
     protected $fillable = [
@@ -18,6 +18,8 @@ class Laboratorium extends Model
         'lokasi',
         'kapasitas',
         'deskripsi',
+        'status',
+        'luas'
     ];
     public function fasilitas()
     {

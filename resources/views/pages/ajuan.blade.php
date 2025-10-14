@@ -76,12 +76,11 @@
                                     class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                                     required>
                                     <option value="">Pilih Laboratorium</option>
-                                    <option value="lab-komputer-1">Lab. Komputer 1 - Gedung B Lt. 1</option>
-                                    <option value="lab-komputer-2">Lab. Komputer 2 - Gedung B Lt. 1</option>
-                                    <option value="lab-kimia">Lab. Kimia - Gedung A Lt. 2</option>
-                                    <option value="lab-biologi">Lab. Biologi - Gedung C Lt. 3</option>
-                                    <option value="lab-fisika">Lab. Fisika - Gedung D Lt. 2</option>
-                                    <option value="lab-multimedia">Lab. Multimedia - Gedung E Lt. 1</option>
+                                    @foreach($laboratorium as $lab)
+                                        <option value="{{ $lab->id }}">
+                                            {{ $lab->nama_laboratorium }} - {{ $lab->lokasi }}
+                                        </option>
+                                    @endforeach
                                 </select>
                             </div>
 
@@ -308,5 +307,5 @@
             </div>
         </div>
     </div>
-    {{-- @include('partials.script-peminjaman') --}}
+    @include('partials.script-ajuan')
 @endsection

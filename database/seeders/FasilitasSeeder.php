@@ -15,19 +15,19 @@ class FasilitasSeeder extends Seeder
     {
         $fasilitas = [
             [
-                'id_laboratorium' => 2,
-                'id_barang' => 2,
+                'id_laboratorium' => 1,
+                'id_barang' => 1,
                 'jumlah' => 30,
                 'kondisi' => 'baik',
             ],
             [
-                'id_laboratorium' => 2,
+                'id_laboratorium' => 1,
                 'id_barang' => 3,
                 'jumlah' => 1,
                 'kondisi' => 'baik',
             ],
             [
-                'id_laboratorium' => 2,
+                'id_laboratorium' => 1,
                 'id_barang' => 4,
                 'jumlah' => 1,
                 'kondisi' => 'baik',

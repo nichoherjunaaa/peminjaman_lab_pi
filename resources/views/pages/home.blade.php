@@ -47,7 +47,7 @@
             <h2 class="text-lg font-medium text-gray-900 mb-4">Aksi Cepat</h2>
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 <x-quick-action 
-                    href="{{ url('/peminjaman') }}"
+                    href="{{ url('/booking') }}"
                     icon="fas fa-plus-circle"
                     title="Ajukan Peminjaman"
                     description="Buat permintaan peminjaman baru"

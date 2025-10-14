@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Peminjaman - Sistem Peminjaman Laboratorium')
+@section('title', 'Laboratorium - Sistem Peminjaman Laboratorium')
 
 @section('content')
     <div class="py-6">
@@ -55,7 +55,9 @@
                                 <dl>
                                     <dt class="text-sm font-medium text-gray-500 truncate">Tersedia</dt>
                                     <dd>
-                                        <div class="text-lg font-medium text-gray-900">8</div>
+                                        <div class="text-lg font-medium text-gray-900">
+                                            {{ $laboratorium->where('status', 'tersedia')->count() }}
+                                        </div>
                                     </dd>
                                 </dl>
                             </div>
@@ -74,7 +76,9 @@
                                 <dl>
                                     <dt class="text-sm font-medium text-gray-500 truncate">Dalam Perawatan</dt>
                                     <dd>
-                                        <div class="text-lg font-medium text-gray-900">2</div>
+                                        <div class="text-lg font-medium text-gray-900">
+                                            {{ $laboratorium->where('status', 'dalam perawatan')->count() }}
+                                        </div>
                                     </dd>
                                 </dl>
                             </div>
@@ -93,7 +97,9 @@
                                 <dl>
                                     <dt class="text-sm font-medium text-gray-500 truncate">Tidak Tersedia</dt>
                                     <dd>
-                                        <div class="text-lg font-medium text-gray-900">2</div>
+                                        <div class="text-lg font-medium text-gray-900">
+                                            {{ $laboratorium->where('status', 'tidak tersedia')->count() }}
+                                        </div>
                                     </dd>
                                 </dl>
                             </div>
@@ -126,10 +132,9 @@
                         <label class="block text-sm font-medium text-gray-700 mb-1">Lokasi</label>
                         <select class="w-full border border-gray-300 rounded-lg px-3 py-2">
                             <option value="">Semua Lokasi</option>
-                            <option value="gedung-a">Gedung A</option>
-                            <option value="gedung-b">Gedung B</option>
-                            <option value="gedung-c">Gedung C</option>
-                            <option value="gedung-d">Gedung D</option>
+                            @foreach($lokasiOnly as $lab)
+                                <option value="{{ $lab->lokasi }}">{{ $lab->lokasi }}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>
@@ -195,23 +200,26 @@
                             </p>
 
                             <div class="mt-6 flex space-x-3">
-                                <a href="{{ route('detail-laboratorium') }}"
+                                <a href="{{ route('detail-laboratorium', $lab->id_laboratorium) }}"
                                     class="flex-1 bg-primary text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-primary-dark inline-flex items-center justify-center">
                                     <i class="fas fa-eye mr-1"></i> Detail
                                 </a>
 
                                 @if(Auth::check() && Auth::user()->isAdmin())
-                                    <button
-                                        class="flex-1 border border-primary text-primary py-2 px-4 rounded-lg text-sm font-medium hover:bg-primary hover:text-white">
+                                    <a href="{{ route("edit.laboratorium") }}"
+                                        class="flex-1 border border-primary text-primary text-center py-2 px-4 rounded-lg text-sm font-medium hover:bg-primary hover:text-white">
                                         <i class="fas fa-edit mr-1"></i> Edit
-                                    </button>
+                                    </a>
                                 @endif
+                                <a href="{{ route('delete.laboratorium', $lab->id_laboratorium) }}"
+                                    class="btn-delete flex-1 bg-primary text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-primary-dark inline-flex items-center justify-center">
+                                    <i class="fas fa-trash mr-1"></i> Hapus
+                                </a>
                             </div>
                         </div>
                     </div>
                 @endforeach
             </div>
-
 
             <!-- Pagination -->
             <div
@@ -251,6 +259,89 @@
                 </div>
             </div>
         </div>
+        <!-- Delete Confirmation Modal -->
+        <div id="deleteModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50">
+            <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+                <div class="p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Konfirmasi Hapus</h3>
+                    <p class="text-gray-600" id="modalMessage">Apakah Anda yakin ingin menghapus laboratorium ini?</p>
+
+                    <div class="mt-6 flex justify-end space-x-3">
+                        <button type="button" id="cancelDelete"
+                            class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
+                            Batal
+                        </button>
+                        <button type="button" id="confirmDelete"
+                            class="px-4 py-2 bg-primary text-white rounded-lg">
+                            Hapus
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    {{-- @include('partials.script-peminjaman') --}}
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var labIdToDelete = null;
+            var $cardToDelete = null;
+
+            // Set CSRF token
+            $.ajaxSetup({
+                headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
+            });
+
+            // Klik tombol Hapus → tampilkan modal
+            $('.btn-delete').on('click', function (e) {
+                e.preventDefault();
+
+                $cardToDelete = $(this).closest('.bg-white');
+                labIdToDelete = $(this).attr('href').split('/').pop();
+                var labName = $cardToDelete.find('h3').text().trim();
+
+                // Ubah teks modal
+                $('#modalMessage').text(`Apakah Anda yakin ingin menghapus laboratorium "${labName}"?`);
+
+                // Tampilkan modal
+                $('#deleteModal').removeClass('hidden').addClass('flex');
+            });
+
+            // Klik Batal → tutup modal
+            $('#cancelDelete').on('click', function () {
+                $('#deleteModal').removeClass('flex').addClass('hidden');
+                labIdToDelete = null;
+                $cardToDelete = null;
+            });
+
+            // Klik Hapus → kirim AJAX
+            $('#confirmDelete').on('click', function () {
+                if (!labIdToDelete) return;
+
+                $.ajax({
+                    url: '/delete-laboratorium/' + labIdToDelete,
+                    type: 'DELETE',
+                    success: function (response) {
+                        // Hapus card lab
+                        if ($cardToDelete) $cardToDelete.remove();
+
+                        // Tutup modal
+                        $('#deleteModal').removeClass('flex').addClass('hidden');
+
+                        // Reset
+                        labIdToDelete = null;
+                        $cardToDelete = null;
+
+                        // Reload daftar peminjaman (jika ada)
+                        $('#booking-list').load('/booking #booking-list > *');
+                    },
+                    error: function (xhr) {
+                        alert('Gagal menghapus laboratorium.');
+                        console.log(xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+
+
 @endsection
