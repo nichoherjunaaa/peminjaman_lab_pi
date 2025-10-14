@@ -19,6 +19,7 @@ Route::get('/laboratorium/1', function () {
     return view('pages.detail_lab');
 })->name('detail-laboratorium');
 
+
 Route::get('/laboratorium', [LaboratoriumController::class, 'index'])->name('laboratorium.index');
 
 Route::get('/booking/1', function(){
