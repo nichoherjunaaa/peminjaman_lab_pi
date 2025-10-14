@@ -77,10 +77,7 @@
                 <!-- form pengajuan -->
 
                 <!-- row 1 -->
-              
-
-               
-
+                 
     </main>
 </div>
 
