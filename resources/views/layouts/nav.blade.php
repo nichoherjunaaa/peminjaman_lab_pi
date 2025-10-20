@@ -37,8 +37,14 @@
                     <i class="fas fa-history mr-2 w-5 text-center"></i>
                     Riwayat
                 </a>
+                @if (Auth::check() && Auth::user() !== null && Auth::user()->isAdmin())
+                    <a href="{{ url('/inventory') }}"
+                        class="nav-item {{ request()->is('inventory') ? 'active' : '' }} px-4 py-3 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200 flex items-center">
+                        <i class="fas fa-history mr-2 w-5 text-center"></i>
+                        Inventory
+                    </a>
+                @endif
             </div>
-
             <!-- User Menu -->
             <div class="flex items-center space-x-4">
                 <!-- Notifications -->
@@ -59,7 +65,7 @@
                             $nama = $user->mahasiswa->nama;
                         } elseif ($user->isDosen() && $user->dosen) {
                             $nama = $user->dosen->nama;
-                        } else{
+                        } else {
                             $nama = 'Administrator';
                         }
                     }
@@ -115,8 +121,7 @@
 <div class="md:hidden bg-primary text-white">
     <div class="flex items-center justify-between px-4 py-3">
         <div class="flex items-center space-x-3">
-            <i class="fas fa-flask text-xl"></i>
-            <span class="font-bold">LabBooking</span>
+            <img src="{{ asset('/images/USD500.png') }}" alt="logo" class="w-1/5 h-1/5">
         </div>
         <button class="p-2" id="mobileMenuButton">
             <i class="fas fa-bars text-xl"></i>

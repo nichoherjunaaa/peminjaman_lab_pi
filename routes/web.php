@@ -1,49 +1,51 @@
 <?php
 
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LaboratoriumController;
 use App\Http\Controllers\Peminjaman;
 use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-// Routes utama
+// Authentikasi
 Route::get('/', function () {
     return view('pages.login');
 });
-
 Route::post('/login', [UserController::class, 'login'])->name('login.post');
 Route::post('/logout', [UserController::class, 'logout'])->name('logout');
-Route::get('/home', function () {
-    return view('pages.home');
-});
-
-Route::get('/laboratorium/{id}', [LaboratoriumController::class, 'show'])->name('detail-laboratorium');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 
+// Laboratorium
 Route::get('/laboratorium', [LaboratoriumController::class, 'index'])->name('laboratorium.index');
+Route::get('/laboratorium/{id}', [LaboratoriumController::class, 'show'])->name('detail-laboratorium');
+Route::get('/laboratorium/{id}/booking', [LaboratoriumController::class, 'show_booking'])->name('booking-laboratorium');
 Route::delete('/delete-laboratorium/{id}', [LaboratoriumController::class, 'destroy'])->name('delete.laboratorium');
-
-Route::get('/booking/1', function(){
-    return view('pages.detail_pengajuan');
-}) ->name('detail-peminjaman');
-
 Route::get('/laboratorium/1/edit', function () {
     return view('pages.edit_laboratorium');
 })->name('edit.laboratorium');
 
-Route::get('/privacy', function () {
-    return view('pages.kebijakan_privasi');
-});
-
-Route::get('/booking', function () {
-    return view('pages.peminjaman');
-
-})->name('booking.index');
-
+// Peminjaman
+Route::get('/booking/1', function () {
+    return view('pages.detail_pengajuan');
+})->name('detail-peminjaman');
+Route::get('/booking', [PeminjamanController::class, 'index'])->name('booking.index');
 Route::get('/create', [PeminjamanController::class, 'create'])->name('booking.form');
-
 Route::get('/riwayat', function () {
     return view('pages.riwayat');
+});
+Route::post('/create/store', [PeminjamanController::class, 'store'])->name('peminjaman.store');
+
+
+// Inventory
+Route::get('/inventory', function () {
+    return view('pages.inventory');
+});
+
+
+
+Route::get('/privacy', function () {
+    return view('pages.kebijakan_privasi');
 });
 
 Route::get('/profil', function () {
@@ -53,12 +55,6 @@ Route::get('/profil', function () {
 Route::get('/pengaturan', function () {
     return view('pages.pengaturan');
 });
-
-// Route untuk test 404 (hapus di production)
-Route::get('/test-404', function () {
-    abort(404);
-});
-
 
 // Fallback route - harus di paling bawah
 Route::fallback(function () {

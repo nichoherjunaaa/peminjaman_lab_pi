@@ -30,7 +30,7 @@
 
 </head>
 
-<body class="bg-gray-50">
+<body class="bg-gray-50 flex flex-col min-h-screen">
     @include('layouts.nav')
 
     <div class="flex flex-col flex-1">

@@ -17,8 +17,9 @@ class DatabaseSeeder extends Seeder
             DosenSeeder::class,
             MahasiswaSeeder::class,
             BarangSeeder::class,
-            LaboratoriumSeeder::class
-
+            LaboratoriumSeeder::class,
+            FasilitasSeeder::class,
+            PeminjamanSeeder::class
         ]);
     }
 }

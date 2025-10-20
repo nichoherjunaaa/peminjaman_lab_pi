@@ -10,7 +10,9 @@ class Mahasiswa extends Model
 
     use HasFactory;
     protected $table = 'mahasiswa';
-    protected $primaryKey = 'id_mahasiswa';
+    protected $primaryKey = 'nim';
+    public $incrementing = false;
+    protected $keyType = 'string';
     public $timestamps = false;
     protected $fillable = [
         'nim',
@@ -22,7 +24,7 @@ class Mahasiswa extends Model
 
     public function peminjaman()
     {
-        return $this->hasMany(Peminjaman::class, 'id_mahasiswa');
+        return $this->morphMany(Peminjaman::class, 'peminjam');
     }
 
     public function user()

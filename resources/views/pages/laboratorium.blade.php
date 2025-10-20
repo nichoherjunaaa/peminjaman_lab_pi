@@ -35,7 +35,7 @@
                                     <dt class="text-sm font-medium text-gray-500 truncate">Total Laboratorium</dt>
                                     <dd>
                                         <div class="text-lg font-medium text-gray-900">
-                                            {{ $laboratorium->count()}}
+                                            {{ $laboratorium->total()}}
                                         </div>
                                     </dd>
                                 </dl>
@@ -56,7 +56,7 @@
                                     <dt class="text-sm font-medium text-gray-500 truncate">Tersedia</dt>
                                     <dd>
                                         <div class="text-lg font-medium text-gray-900">
-                                            {{ $laboratorium->where('status', 'tersedia')->count() }}
+                                            {{ $jumlah_tersedia }}
                                         </div>
                                     </dd>
                                 </dl>
@@ -210,11 +210,11 @@
                                         class="flex-1 border border-primary text-primary text-center py-2 px-4 rounded-lg text-sm font-medium hover:bg-primary hover:text-white">
                                         <i class="fas fa-edit mr-1"></i> Edit
                                     </a>
+                                    <a href="{{ route('delete.laboratorium', $lab->id_laboratorium) }}"
+                                        class="btn-delete flex-1 bg-primary text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-primary-dark inline-flex items-center justify-center">
+                                        <i class="fas fa-trash mr-1"></i> Hapus
+                                    </a>
                                 @endif
-                                <a href="{{ route('delete.laboratorium', $lab->id_laboratorium) }}"
-                                    class="btn-delete flex-1 bg-primary text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-primary-dark inline-flex items-center justify-center">
-                                    <i class="fas fa-trash mr-1"></i> Hapus
-                                </a>
                             </div>
                         </div>
                     </div>
@@ -228,32 +228,56 @@
                     <div>
                         <p class="text-sm text-gray-700">
                             Menampilkan
-                            <span class="font-medium">1</span>
+                            <span class="font-medium">{{ $laboratorium->firstItem() }}</span>
                             sampai
-                            <span class="font-medium">6</span>
+                            <span class="font-medium">{{ $laboratorium->lastItem() }}</span>
                             dari
-                            <span class="font-medium">12</span>
+                            <span class="font-medium">{{ $laboratorium->total() }}</span>
                             laboratorium
                         </p>
                     </div>
                     <div>
                         <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                            <a href="#"
-                                class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                                <span class="sr-only">Previous</span>
-                                <i class="fas fa-chevron-left"></i>
-                            </a>
-                            <a href="#" aria-current="page"
-                                class="z-10 bg-primary border-primary text-white relative inline-flex items-center px-4 py-2 border text-sm font-medium">1</a>
-                            <a href="#"
-                                class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">2</a>
-                            <a href="#"
-                                class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">3</a>
-                            <a href="#"
-                                class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                                <span class="sr-only">Next</span>
-                                <i class="fas fa-chevron-right"></i>
-                            </a>
+                            {{-- Tombol Previous --}}
+                            @if ($laboratorium->onFirstPage())
+                                <span
+                                    class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-gray-100 text-sm font-medium text-gray-400 cursor-not-allowed">
+                                    <i class="fas fa-chevron-left"></i>
+                                </span>
+                            @else
+                                <a href="{{ $laboratorium->previousPageUrl() }}"
+                                    class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                    <i class="fas fa-chevron-left"></i>
+                                </a>
+                            @endif
+
+                            {{-- Nomor Halaman --}}
+                            @foreach ($laboratorium->getUrlRange(1, $laboratorium->lastPage()) as $page => $url)
+                                @if ($page == $laboratorium->currentPage())
+                                    <span
+                                        class="z-10 bg-primary border-primary text-white relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                                        {{ $page }}
+                                    </span>
+                                @else
+                                    <a href="{{ $url }}"
+                                        class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                                        {{ $page }}
+                                    </a>
+                                @endif
+                            @endforeach
+
+                            {{-- Tombol Next --}}
+                            @if ($laboratorium->hasMorePages())
+                                <a href="{{ $laboratorium->nextPageUrl() }}"
+                                    class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                    <i class="fas fa-chevron-right"></i>
+                                </a>
+                            @else
+                                <span
+                                    class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-gray-100 text-sm font-medium text-gray-400 cursor-not-allowed">
+                                    <i class="fas fa-chevron-right"></i>
+                                </span>
+                            @endif
                         </nav>
                     </div>
                 </div>
@@ -271,8 +295,7 @@
                             class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
                             Batal
                         </button>
-                        <button type="button" id="confirmDelete"
-                            class="px-4 py-2 bg-primary text-white rounded-lg">
+                        <button type="button" id="confirmDelete" class="px-4 py-2 bg-primary text-white rounded-lg">
                             Hapus
                         </button>
                     </div>
