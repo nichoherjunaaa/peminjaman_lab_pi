@@ -10,10 +10,10 @@ class UserController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->only('username', 'password');
-
+        dd($credentials);
         if (Auth::attempt($credentials)) {
             return redirect('/home');
-        }
+        } 
 
         return back()->withErrors([
             'login_error' => 'Username atau password salah.',
