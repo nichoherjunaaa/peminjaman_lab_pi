@@ -8,6 +8,7 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="icon" href="/images/USD500.png">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
@@ -27,7 +28,11 @@
             }
         }
     </script>
-
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
 </head>
 
 <body class="bg-gray-50 flex flex-col min-h-screen">
@@ -38,7 +43,7 @@
             @yield('content')
         </main>
     </div>
-    
+
     @include("layouts.footer")
 
     <!-- Mobile Bottom Navigation -->
@@ -66,8 +71,7 @@
             </a>
         </div>
     </div>
-
-    @include('partials.scripts')
+    <script src="js/script.js"></script>
     @stack('scripts')
 </body>
 

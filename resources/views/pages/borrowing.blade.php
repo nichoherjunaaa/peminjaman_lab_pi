@@ -55,7 +55,7 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="text-sm text-gray-900">{{ $book->tanggal }}</div>
-                                        <div class="text-sm text-gray-500">13:00 - 15:00</div>
+                                        <div class="text-sm text-gray-500">{{ $book->jam_mulai }} - {{ $book->jam_selesai }}</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="text-sm text-gray-900">{{ $book->peminjam->nama ?? '-' }}</div>
@@ -70,7 +70,7 @@
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                        <a href="{{ route("detail-peminjaman") }}" class="text-primary hover:text-primary-dark mr-3">
+                                        <a href="{{ route("borrowing-details", $book->id_peminjaman) }}" class="text-primary hover:text-primary-dark mr-3">
                                             <i class="fas fa-eye"></i>
                                         </a>
                                     </td>
@@ -142,4 +142,5 @@
             </div>
         </div>
     </div>
+    <script src="js/borrowing.js"></script>
 @endsection

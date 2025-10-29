@@ -13,42 +13,42 @@ class PeminjamanController extends Controller
     public function create()
     {
         $laboratorium = Laboratorium::all();
-        return view('pages.ajuan', compact('laboratorium'));
+        return view('pages.submission', compact('laboratorium'));
     }
 
 
     public function index()
     {
         $user = auth()->user();
-
-        // Ambil nim/nip user yang login
+        $admin = $user->role === 'admin';
         $peminjamKey = $user->username;
 
-        // Cek apakah user mahasiswa atau dosen
         if ($user->isMahasiswa()) {
             $peminjam = Mahasiswa::where('nim', $peminjamKey)->first();
+            $namaPeminjam = $peminjam->nama ?? 'Tidak Diketahui';
         } elseif ($user->isDosen()) {
             $peminjam = Dosen::where('nip', $peminjamKey)->first();
+            $namaPeminjam = $peminjam->nama ?? 'Tidak Diketahui';
+        } elseif ($admin) {
+            $peminjam = null;
+            $namaPeminjam = 'Admin';
         } else {
             $peminjam = null;
+            $namaPeminjam = 'Tidak Diketahui';
         }
 
-        if (!$peminjam) {
+        if (!$admin && !$peminjam) {
             return back()->with('error', 'Data peminjam tidak ditemukan.');
         }
 
-        // Ambil daftar peminjaman berdasarkan NIM/NIP (bukan id_user)
         $list_peminjaman = Peminjaman::with(['peminjam', 'laboratorium'])
-            ->where('id_peminjam', $peminjamKey)
-            ->paginate(4);
+            ->when(!$admin, function ($query) use ($peminjamKey) {
+                $query->where('id_peminjam', $peminjamKey);
+            })
+            ->paginate(10);
 
-        // Ambil nama peminjam dari tabel mahasiswa/dosen
-        $namaPeminjam = $peminjam->nama ?? 'Tidak Diketahui';
-
-        return view('pages.peminjaman', compact('list_peminjaman', 'namaPeminjam'));
+        return view('pages.borrowing', compact('list_peminjaman', 'namaPeminjam'));
     }
-
-
 
     public function store(Request $request)
     {
@@ -86,6 +86,20 @@ class PeminjamanController extends Controller
 
 
         return redirect()->route('booking.index')->with('success', 'Peminjaman berhasil diajukan!');
+    }
+
+    public function show($id)
+    {
+        $peminjaman = Peminjaman::with(['peminjam', 'laboratorium'])->findOrFail($id);
+        return view('pages.submission-details', compact('peminjaman'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $peminjaman = Peminjaman::findOrFail($id);
+        $peminjaman->status = $request->status;
+        $peminjaman->save();
+        return redirect()->route('borrowing.index')->with('success', 'Peminjaman berhasil disetujui!');
     }
 
 }

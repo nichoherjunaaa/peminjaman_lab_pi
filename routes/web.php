@@ -22,38 +22,24 @@ Route::get('/laboratorium/{id}', [LaboratoriumController::class, 'show'])->name(
 Route::get('/laboratorium/{id}/booking', [LaboratoriumController::class, 'show_booking'])->name('booking-laboratorium');
 Route::delete('/delete-laboratorium/{id}', [LaboratoriumController::class, 'destroy'])->name('delete.laboratorium');
 Route::get('/laboratorium/1/edit', function () {
-    return view('pages.edit_laboratorium');
+    return view('pages.laboratorium-edit');
 })->name('edit.laboratorium');
 
 // Peminjaman
-Route::get('/booking/1', function () {
-    return view('pages.detail_pengajuan');
-})->name('detail-peminjaman');
-Route::get('/booking', [PeminjamanController::class, 'index'])->name('booking.index');
+Route::get('/borrowing/{id}', [PeminjamanController::class, 'show'])->name('borrowing-details');
+Route::get('/borrowing', [PeminjamanController::class, 'index'])->name('borrowing.index');
 Route::get('/create', [PeminjamanController::class, 'create'])->name('booking.form');
-Route::get('/riwayat', function () {
-    return view('pages.riwayat');
-});
+Route::put('/borrowing/{id}', [PeminjamanController::class, 'update'])->name('borrowing.update');
+
 Route::post('/create/store', [PeminjamanController::class, 'store'])->name('peminjaman.store');
 
-
-// Inventory
-Route::get('/inventory', function () {
-    return view('pages.inventory');
+// Report
+Route::get('/report', function () {
+    return view('pages.report');
 });
-
-
 
 Route::get('/privacy', function () {
-    return view('pages.kebijakan_privasi');
-});
-
-Route::get('/profil', function () {
-    return view('pages.profil');
-});
-
-Route::get('/pengaturan', function () {
-    return view('pages.pengaturan');
+    return view('pages.privacy');
 });
 
 // Fallback route - harus di paling bawah

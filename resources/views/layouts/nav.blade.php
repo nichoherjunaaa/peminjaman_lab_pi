@@ -22,8 +22,8 @@
                     <i class="fas fa-home mr-2 w-5 text-center"></i>
                     Beranda
                 </a>
-                <a href="{{ url('/booking') }}"
-                    class="nav-item {{ request()->is('booking') ? 'active' : '' }} px-4 py-3 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200 flex items-center">
+                <a href="{{ url('/borrowing') }}"
+                    class="nav-item {{ request()->is('borrowing') ? 'active' : '' }} px-4 py-3 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200 flex items-center">
                     <i class="fas fa-calendar-alt mr-2 w-5 text-center"></i>
                     Peminjaman
                 </a>
@@ -32,16 +32,12 @@
                     <i class="fas fa-building mr-2 w-5 text-center"></i>
                     Laboratorium
                 </a>
-                <a href="{{ url('/riwayat') }}"
-                    class="nav-item {{ request()->is('riwayat') ? 'active' : '' }} px-4 py-3 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200 flex items-center">
-                    <i class="fas fa-history mr-2 w-5 text-center"></i>
-                    Riwayat
-                </a>
-                @if (Auth::check() && Auth::user() !== null && Auth::user()->isAdmin())
-                    <a href="{{ url('/inventory') }}"
-                        class="nav-item {{ request()->is('inventory') ? 'active' : '' }} px-4 py-3 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200 flex items-center">
-                        <i class="fas fa-history mr-2 w-5 text-center"></i>
-                        Inventory
+                
+                @if (Auth::check() && Auth::user()->isAdmin())
+                    <a href="{{ url('/report') }}"
+                        class="nav-item {{ request()->is('report') ? 'active' : '' }} px-4 py-3 text-sm font-medium text-white rounded-lg flex items-center">
+                        <i class="fas fa-chart-bar mr-2 w-5 text-center"></i>
+                        Laporan
                     </a>
                 @endif
             </div>
