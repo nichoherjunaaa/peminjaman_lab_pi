@@ -20,7 +20,7 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/laboratorium', [LaboratoriumController::class, 'index'])->name('laboratorium.index');
 Route::get('/laboratorium/{id}', [LaboratoriumController::class, 'show'])->name('detail-laboratorium');
 Route::get('/laboratorium/{id}/booking', [LaboratoriumController::class, 'show_booking'])->name('booking-laboratorium');
-Route::delete('/delete-laboratorium/{id}', [LaboratoriumController::class, 'destroy'])->name('delete.laboratorium');
+Route::delete('/laboratorium/{id}', [LaboratoriumController::class, 'destroy'])->name('laboratorium.destroy');
 Route::get('/laboratorium/1/edit', function () {
     return view('pages.laboratorium-edit');
 })->name('edit.laboratorium');
@@ -34,9 +34,7 @@ Route::put('/borrowing/{id}', [PeminjamanController::class, 'update'])->name('bo
 Route::post('/create/store', [PeminjamanController::class, 'store'])->name('peminjaman.store');
 
 // Report
-Route::get('/report', function () {
-    return view('pages.report');
-});
+Route::get('/report', [PeminjamanController::class, 'report'])->name('report');
 
 Route::get('/privacy', function () {
     return view('pages.privacy');

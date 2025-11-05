@@ -5,11 +5,13 @@
 @section('content')
     <div class="py-6">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
-            <div class="bg-white shadow overflow-hidden sm:rounded-lg">
-                <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900">Daftar Pengajuan Peminjaman</h3>
-                    <p class="mt-1 max-w-2xl text-sm text-gray-500">Semua pengajuan peminjaman laboratorium</p>
+            <div class="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900">Daftar Pengajuan Peminjaman</h1>
+                    <p class="mt-2 text-gray-600">Semua pengajuan peminjaman laboratorium</p>
                 </div>
+            </div>
+            <div class="bg-white shadow overflow-hidden sm:rounded-lg">
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
@@ -44,9 +46,6 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="flex items-center">
-                                            <div class="h-8 w-8 rounded-lg bg-primary flex items-center justify-center mr-3">
-                                                <i class="fas fa-desktop text-white text-sm"></i>
-                                            </div>
                                             <div>
                                                 <div class="text-sm text-gray-900">{{ $book->laboratorium->nama_laboratorium }}</div>
                                                 <div class="text-sm text-gray-500">{{ $book->laboratorium->lokasi }}</div>
@@ -55,7 +54,9 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="text-sm text-gray-900">{{ $book->tanggal }}</div>
-                                        <div class="text-sm text-gray-500">{{ $book->jam_mulai }} - {{ $book->jam_selesai }}</div>
+                                        <div class="text-sm text-gray-500"> {{ date('H:i', strtotime($book->jam_mulai)) }} - 
+                                            {{ date('H:i', strtotime($book->jam_selesai)) }}
+                                        </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="text-sm text-gray-900">{{ $book->peminjam->nama ?? '-' }}</div>

@@ -51,8 +51,6 @@
                 </button>
 
                 @php
-                    use Illuminate\Support\Facades\Auth;
-
                     $user = Auth::user();
                     $nama = 'Tidak diketahui';
 
@@ -86,16 +84,6 @@
                     <div
                         class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform translate-y-1 group-hover:translate-y-0">
                         <div class="py-1">
-                            <a href="{{ url('/profil') }}"
-                                class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-200">
-                                <i class="fas fa-user mr-3 w-4 text-center"></i>
-                                Profil Saya
-                            </a>
-                            <a href="{{ url('/pengaturan') }}"
-                                class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-200">
-                                <i class="fas fa-cog mr-3 w-4 text-center"></i>
-                                Pengaturan
-                            </a>
                             <div class="border-t border-gray-100 my-1"></div>
                             <form action="{{ url('/logout') }}" method="POST"
                                 class="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-gray-50 transition-colors duration-200">

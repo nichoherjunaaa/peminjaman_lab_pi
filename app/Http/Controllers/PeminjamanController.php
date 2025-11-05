@@ -5,6 +5,7 @@ use App\Models\Laboratorium;
 use App\Models\Mahasiswa;
 use App\Models\Peminjaman;
 use Auth;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -45,6 +46,7 @@ class PeminjamanController extends Controller
             ->when(!$admin, function ($query) use ($peminjamKey) {
                 $query->where('id_peminjam', $peminjamKey);
             })
+            ->orderBy('created_at', 'desc')
             ->paginate(10);
 
         return view('pages.borrowing', compact('list_peminjaman', 'namaPeminjam'));
@@ -85,7 +87,7 @@ class PeminjamanController extends Controller
         }
 
 
-        return redirect()->route('booking.index')->with('success', 'Peminjaman berhasil diajukan!');
+        return redirect()->route('borrowing.index')->with('success', 'Peminjaman berhasil diajukan!');
     }
 
     public function show($id)
@@ -100,6 +102,50 @@ class PeminjamanController extends Controller
         $peminjaman->status = $request->status;
         $peminjaman->save();
         return redirect()->route('borrowing.index')->with('success', 'Peminjaman berhasil disetujui!');
+    }
+    public function report(Request $request)
+    {
+        // dd($request->all());
+        $filter = $request->input('filter', 'all'); // periode waktu
+        $status = $request->input('status', 'all'); // status peminjaman
+        $lab_id = $request->input('id_laboratorium', 'all'); // laboratorium
+
+        $query = Peminjaman::query();
+
+        // --- Filter waktu ---
+        switch ($filter) {
+            case 'weekly':
+                $query->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
+                break;
+            case 'monthly':
+                $query->whereMonth('created_at', Carbon::now()->month)
+                    ->whereYear('created_at', Carbon::now()->year);
+                break;
+            case '3months':
+                $query->where('created_at', '>=', Carbon::now()->subMonths(3));
+                break;
+            case '6months':
+                $query->where('created_at', '>=', Carbon::now()->subMonths(6));
+                break;
+            case 'yearly':
+                $query->whereYear('created_at', Carbon::now()->year);
+                break;
+        }
+
+        // --- Filter status ---
+        if ($status !== 'all') {
+            $query->where('status', $status);
+        }
+
+        // --- Filter laboratorium ---
+        if ($lab_id !== 'all') {
+            $query->where('laboratorium_id', $lab_id);
+        }
+
+        $peminjaman_count = $query->count();
+        $laboratoriums = Laboratorium::all();
+
+        return view('pages.report', compact('peminjaman_count', 'filter', 'status', 'lab_id', 'laboratoriums'));
     }
 
 }
