@@ -36,7 +36,7 @@
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
                             <!-- Row 1 -->
-                            @foreach ($list_peminjaman as $book)
+                            @forea2ch ($list_peminjaman as $book)
                                 <tr class="hover:bg-gray-50">
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="text-sm">{{ $book->nama_kegiatan }}
@@ -70,7 +70,7 @@
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                        <a href="{{ route("detail-peminjaman") }}" class="text-primary hover:text-primary-dark mr-3">
+                                        <a href="{{ route("detail-peminjaman", $book->id_peminjaman) }}" class="text-primary hover:text-primary-dark mr-3">
                                             <i class="fas fa-eye"></i>
                                         </a>
                                     </td>

@@ -26,16 +26,17 @@ Route::get('/laboratorium/1/edit', function () {
 })->name('edit.laboratorium');
 
 // Peminjaman
-Route::get('/booking/1', function () {
-    return view('pages.detail_pengajuan');
-})->name('detail-peminjaman');
 Route::get('/booking', [PeminjamanController::class, 'index'])->name('booking.index');
 Route::get('/create', [PeminjamanController::class, 'create'])->name('booking.form');
+Route::get('/booking/{id}',[PeminjamanController::class,'aksi'])->name('detail-peminjaman');
+
 Route::get('/riwayat', function () {
     return view('pages.riwayat');
 });
 Route::post('/create/store', [PeminjamanController::class, 'store'])->name('peminjaman.store');
 
+//update status
+Route::post('/peminjaman/{id}/update-status',[PeminjamanController::class,'updateStatus'])->name('peminjaman.updateStatus');
 
 // Inventory
 Route::get('/inventory', function () {

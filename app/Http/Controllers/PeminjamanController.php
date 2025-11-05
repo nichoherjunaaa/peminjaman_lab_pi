@@ -48,6 +48,22 @@ class PeminjamanController extends Controller
         return view('pages.peminjaman', compact('list_peminjaman', 'namaPeminjam'));
     }
 
+    public function aksi($id)
+{
+    $peminjaman = Peminjaman::findOrFail($id);
+    $peminjaman->load('peminjam','laboratorium','jadwal');
+    // dd($peminjaman->peminjam);
+    return view('pages.detail_pengajuan', compact('peminjaman'));
+}   
+
+    public function updateStatus(Request $request, $id){
+    $peminjaman = Peminjaman::findOrFail($id);
+    $peminjaman->status = $request->input('status');
+    $peminjaman->save();
+
+    return redirect()->back->with('success','Status berhasil diubah');
+}
+
 
 
     public function store(Request $request)
@@ -89,4 +105,3 @@ class PeminjamanController extends Controller
     }
 
 }
-
