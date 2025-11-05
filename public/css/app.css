@@ -163,6 +163,10 @@
     color: #991b1b;
 }
 
+.bg-rejected {
+    background-color: #ff0000;
+}
+
 .status-done {
     background-color: #e0e7ff;
     color: #3730a3;

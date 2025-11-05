@@ -1,4 +1,3 @@
-<script>
 document.addEventListener('DOMContentLoaded', async function () {
 
     const labId = {{ $lab->id_laboratorium }};
@@ -210,4 +209,3 @@ document.addEventListener('DOMContentLoaded', async function () {
         renderBookingList();
     });
 });
-</script>

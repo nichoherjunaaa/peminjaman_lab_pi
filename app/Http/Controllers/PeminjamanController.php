@@ -5,6 +5,7 @@ use App\Models\Laboratorium;
 use App\Models\Mahasiswa;
 use App\Models\Peminjaman;
 use Auth;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -13,55 +14,68 @@ class PeminjamanController extends Controller
     public function create()
     {
         $laboratorium = Laboratorium::all();
-        return view('pages.ajuan', compact('laboratorium'));
+        return view('pages.submission', compact('laboratorium'));
     }
 
-
-    public function index()
-    {
-        $user = auth()->user();
-
-        // Ambil nim/nip user yang login
-        $peminjamKey = $user->username;
-
-        // Cek apakah user mahasiswa atau dosen
-        if ($user->isMahasiswa()) {
-            $peminjam = Mahasiswa::where('nim', $peminjamKey)->first();
-        } elseif ($user->isDosen()) {
-            $peminjam = Dosen::where('nip', $peminjamKey)->first();
-        } else {
-            $peminjam = null;
-        }
-
-        if (!$peminjam) {
-            return back()->with('error', 'Data peminjam tidak ditemukan.');
-        }
-
-        // Ambil daftar peminjaman berdasarkan NIM/NIP (bukan id_user)
-        $list_peminjaman = Peminjaman::with(['peminjam', 'laboratorium'])
-            ->where('id_peminjam', $peminjamKey)
-            ->paginate(4);
-
-        // Ambil nama peminjam dari tabel mahasiswa/dosen
-        $namaPeminjam = $peminjam->nama ?? 'Tidak Diketahui';
-
-        return view('pages.peminjaman', compact('list_peminjaman', 'namaPeminjam'));
-    }
-
-    public function aksi($id)
+public function index(Request $request)
 {
-    $peminjaman = Peminjaman::findOrFail($id);
-    $peminjaman->load('peminjam','laboratorium','jadwal');
-    // dd($peminjaman->peminjam);
-    return view('pages.detail_pengajuan', compact('peminjaman'));
-}   
+    // Ambil data unik untuk dropdown filter
+    $tanggal_peminjaman = Peminjaman::select('tanggal')
+        ->distinct()
+        ->get();
 
-    public function updateStatus(Request $request, $id){
-    $peminjaman = Peminjaman::findOrFail($id);
-    $peminjaman->status = $request->input('status');
-    $peminjaman->save();
+    $laboratorium = Peminjaman::select('id_laboratorium')
+        ->distinct()
+        ->get();
 
-    return redirect()->back->with('success','Status berhasil diubah');
+    // Ambil user login
+    $user = auth()->user();
+    $admin = $user->role === 'admin';
+    $peminjamKey = $user->username;
+
+    // Dapatkan nama peminjam berdasarkan role
+    if ($user->isMahasiswa()) {
+        $peminjam = Mahasiswa::where('nim', $peminjamKey)->first();
+        $namaPeminjam = $peminjam->nama ?? 'Tidak Diketahui';
+    } elseif ($user->isDosen()) {
+        $peminjam = Dosen::where('nip', $peminjamKey)->first();
+        $namaPeminjam = $peminjam->nama ?? 'Tidak Diketahui';
+    } elseif ($admin) {
+        $peminjam = null;
+        $namaPeminjam = 'Admin';
+    } else {
+        $peminjam = null;
+        $namaPeminjam = 'Tidak Diketahui';
+    }
+
+    if (!$admin && !$peminjam) {
+        return back()->with('error', 'Data peminjam tidak ditemukan.');
+    }
+
+    // Ambil input filter dari request
+    $filterTanggal = $request->input('tanggal');
+    $filterLab = $request->input('laboratorium');
+
+    // Query utama
+    $list_peminjaman = Peminjaman::with(['peminjam', 'laboratorium'])
+        ->when(!$admin, function ($query) use ($peminjamKey) {
+            $query->where('id_peminjam', $peminjamKey);
+        })
+        ->when($filterTanggal, function ($query) use ($filterTanggal) {
+            $query->where('tanggal', $filterTanggal);
+        })
+        ->when($filterLab, function ($query) use ($filterLab) {
+            $query->where('id_laboratorium', $filterLab);
+        })
+        ->orderBy('created_at', 'desc')
+        ->paginate(10);
+
+    return view('pages.borrowing', compact(
+        'list_peminjaman',
+        'namaPeminjam',
+        'tanggal_peminjaman',
+        'laboratorium'
+    ));
 }
 
 
@@ -101,7 +115,65 @@ class PeminjamanController extends Controller
         }
 
 
-        return redirect()->route('booking.index')->with('success', 'Peminjaman berhasil diajukan!');
+        return redirect()->route('borrowing.index')->with('success', 'Peminjaman berhasil diajukan!');
+    }
+
+    public function show($id)
+    {
+        $peminjaman = Peminjaman::with(['peminjam', 'laboratorium'])->findOrFail($id);
+        return view('pages.submission-details', compact('peminjaman'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $peminjaman = Peminjaman::findOrFail($id);
+        $peminjaman->status = $request->status;
+        $peminjaman->save();
+        return redirect()->route('borrowing.index')->with('success', 'Peminjaman berhasil disetujui!');
+    }
+    public function report(Request $request)
+    {
+        // dd($request->all());
+        $filter = $request->input('filter', 'all'); // periode waktu
+        $status = $request->input('status', 'all'); // status peminjaman
+        $lab_id = $request->input('id_laboratorium', 'all'); // laboratorium
+
+        $query = Peminjaman::query();
+
+        // --- Filter waktu ---
+        switch ($filter) {
+            case 'weekly':
+                $query->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
+                break;
+            case 'monthly':
+                $query->whereMonth('created_at', Carbon::now()->month)
+                    ->whereYear('created_at', Carbon::now()->year);
+                break;
+            case '3months':
+                $query->where('created_at', '>=', Carbon::now()->subMonths(3));
+                break;
+            case '6months':
+                $query->where('created_at', '>=', Carbon::now()->subMonths(6));
+                break;
+            case 'yearly':
+                $query->whereYear('created_at', Carbon::now()->year);
+                break;
+        }
+
+        // --- Filter status ---
+        if ($status !== 'all') {
+            $query->where('status', $status);
+        }
+
+        // --- Filter laboratorium ---
+        if ($lab_id !== 'all') {
+            $query->where('laboratorium_id', $lab_id);
+        }
+
+        $peminjaman_count = $query->count();
+        $laboratoriums = Laboratorium::all();
+
+        return view('pages.report', compact('peminjaman_count', 'filter', 'status', 'lab_id', 'laboratoriums'));
     }
 
 }

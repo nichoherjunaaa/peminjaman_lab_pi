@@ -44,7 +44,7 @@ class MahasiswaSeeder extends Seeder
 
             User::create([
                 'username' => $data['nim'],
-                'password' => '123456', // ✅ biarkan plain, model akan hash otomatis
+                'password' => '123456',
                 'role' => 'mahasiswa',
             ]);
         }

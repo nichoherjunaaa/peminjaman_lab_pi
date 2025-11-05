@@ -42,6 +42,18 @@
                     <div class="flex items-center">
                         <div class="step-indicator">3</div>
                         <div class="hidden sm:block">
+                            <p class="text-sm font-medium text-gray-500">Upload Dokumen</p>
+                            <p class="text-xs text-gray-500">Foto KTM & dokumen</p>
+                        </div>
+                    </div>
+
+                    <!-- Connector -->
+                    <div class="flex-1 h-1 bg-gray-200 mx-4"></div>
+
+                    <!-- Step 4 -->
+                    <div class="flex items-center">
+                        <div class="step-indicator">4</div>
+                        <div class="hidden sm:block">
                             <p class="text-sm font-medium text-gray-500">Konfirmasi</p>
                             <p class="text-xs text-gray-500">Review & submit</p>
                         </div>
@@ -51,7 +63,8 @@
 
             <!-- Form Peminjaman -->
             <div class="bg-white p-6 rounded-lg shadow">
-                <form id="peminjamanForm" action="{{ route('peminjaman.store') }}" method="POST">
+                <form id="peminjamanForm" action="{{ route('peminjaman.store') }}" method="POST"
+                    enctype="multipart/form-data">
                     @csrf
                     <!-- Step 1: Informasi Dasar -->
                     <div class="form-step active" id="step1">
@@ -209,8 +222,132 @@
                         </div>
                     </div>
 
-                    <!-- Step 3: Konfirmasi -->
+                    <!-- Step 3: Upload Dokumen -->
                     <div class="form-step" id="step3">
+                        <h2 class="text-lg font-semibold text-gray-900 mb-4">Upload Dokumen Pendukung</h2>
+
+                        <div class="space-y-6">
+                            <!-- Upload Foto KTM -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Foto Kartu Tanda Mahasiswa (KTM)
+                                    *</label>
+
+                                <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-primary transition-colors duration-200"
+                                    id="ktmUploadArea">
+                                    <div id="ktmUploadContent">
+                                        <i class="fas fa-cloud-upload-alt text-gray-400 text-3xl mb-3"></i>
+                                        <p class="text-sm text-gray-600 mb-1">Upload foto KTM Anda</p>
+                                        <p class="text-xs text-gray-500">Format: JPG, PNG (Maks. 2MB)</p>
+                                        <button type="button"
+                                            class="mt-3 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors duration-200"
+                                            onclick="document.getElementById('fotoKTM').click()">
+                                            Pilih File
+                                        </button>
+                                    </div>
+                                    <div id="ktmPreview" class="hidden">
+                                        <div class="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
+                                            <div class="flex items-center">
+                                                <i class="fas fa-file-image text-primary text-lg mr-3"></i>
+                                                <div>
+                                                    <p class="text-sm font-medium text-gray-900" id="ktmFileName">ktm.jpg
+                                                    </p>
+                                                    <p class="text-xs text-gray-500" id="ktmFileSize">1.2 MB</p>
+                                                </div>
+                                            </div>
+                                            <button type="button" class="text-red-500 hover:text-red-700"
+                                                onclick="removeKTM()">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </div>
+                                        <div class="mt-3 flex justify-center">
+                                            <img id="ktmImagePreview" class="max-h-40 rounded-lg border border-gray-200"
+                                                src="" alt="Preview KTM">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <input type="file" id="fotoKTM" name="foto_ktm" class="hidden" accept="image/jpeg,image/png"
+                                    required>
+                                <p class="mt-2 text-xs text-gray-500">Pastikan foto KTM terlihat jelas dan terbaca dengan
+                                    baik</p>
+                            </div>
+
+                            <!-- Upload Surat Tugas (Opsional) -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Surat Tugas (Opsional)</label>
+
+                                <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-primary transition-colors duration-200"
+                                    id="suratUploadArea">
+                                    <div id="suratUploadContent">
+                                        <i class="fas fa-cloud-upload-alt text-gray-400 text-3xl mb-3"></i>
+                                        <p class="text-sm text-gray-600 mb-1">Upload surat tugas (jika ada)</p>
+                                        <p class="text-xs text-gray-500">Format: PDF, JPG, PNG (Maks. 5MB)</p>
+                                        <button type="button"
+                                            class="mt-3 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors duration-200"
+                                            onclick="document.getElementById('suratTugas').click()">
+                                            Pilih File
+                                        </button>
+                                    </div>
+                                    <div id="suratPreview" class="hidden">
+                                        <div class="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
+                                            <div class="flex items-center">
+                                                <i class="fas fa-file-pdf text-red-500 text-lg mr-3"></i>
+                                                <div>
+                                                    <p class="text-sm font-medium text-gray-900" id="suratFileName">
+                                                        surat.pdf</p>
+                                                    <p class="text-xs text-gray-500" id="suratFileSize">2.1 MB</p>
+                                                </div>
+                                            </div>
+                                            <button type="button" class="text-red-500 hover:text-red-700"
+                                                onclick="removeSurat()">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <input type="file" id="suratTugas" name="surat_tugas" class="hidden"
+                                    accept=".pdf,image/jpeg,image/png">
+                                <p class="mt-2 text-xs text-gray-500">Surat tugas dari departemen atau dosen pembimbing</p>
+                            </div>
+
+                            <!-- Informasi Upload -->
+                            <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                                <div class="flex">
+                                    <div class="flex-shrink-0">
+                                        <i class="fas fa-info-circle text-blue-500 text-lg"></i>
+                                    </div>
+                                    <div class="ml-3">
+                                        <h3 class="text-sm font-medium text-blue-800">Penting!</h3>
+                                        <div class="mt-1 text-sm text-blue-700">
+                                            <ul class="list-disc list-inside space-y-1">
+                                                <li>Foto KTM wajib diupload untuk verifikasi identitas</li>
+                                                <li>Pastikan foto KTM tidak blur dan semua informasi terbaca jelas</li>
+                                                <li>File yang diupload maksimal 2MB untuk foto dan 5MB untuk dokumen</li>
+                                                <li>Format yang didukung: JPG, PNG, PDF</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-between mt-6">
+                            <button type="button"
+                                class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200"
+                                onclick="prevStep(2)">
+                                <i class="fas fa-arrow-left mr-2"></i> Kembali
+                            </button>
+                            <button type="button"
+                                class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors duration-200"
+                                onclick="nextStep(4)">
+                                Selanjutnya <i class="fas fa-arrow-right ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Konfirmasi -->
+                    <div class="form-step" id="step4">
                         <h2 class="text-lg font-semibold text-gray-900 mb-4">Konfirmasi Peminjaman</h2>
 
                         <div class="bg-gray-50 p-4 rounded-lg mb-6">
@@ -258,6 +395,23 @@
                                 <p class="text-sm font-medium text-gray-700">Keperluan:</p>
                                 <p id="summaryKeperluan" class="text-sm text-gray-900">-</p>
                             </div>
+
+                            <!-- Dokumen yang diupload -->
+                            <div class="mt-4 pt-4 border-t border-gray-200">
+                                <p class="text-sm font-medium text-gray-700 mb-2">Dokumen Pendukung:</p>
+                                <div class="flex items-center space-x-2">
+                                    <i class="fas fa-file-image text-primary"></i>
+                                    <span class="text-sm text-gray-900" id="summaryKTM">Foto KTM</span>
+                                    <span class="text-xs text-green-600 bg-green-100 px-2 py-1 rounded-full">✓
+                                        Terupload</span>
+                                </div>
+                                <div class="flex items-center space-x-2 mt-2" id="summarySuratContainer">
+                                    <i class="fas fa-file-pdf text-red-500"></i>
+                                    <span class="text-sm text-gray-900" id="summarySurat">Surat Tugas</span>
+                                    <span class="text-xs text-green-600 bg-green-100 px-2 py-1 rounded-full">✓
+                                        Terupload</span>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Persetujuan -->
@@ -275,7 +429,7 @@
                         <div class="flex justify-between">
                             <button type="button"
                                 class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200"
-                                onclick="prevStep(2)">
+                                onclick="prevStep(3)">
                                 <i class="fas fa-arrow-left mr-2"></i> Kembali
                             </button>
                             <button type="submit"
@@ -308,5 +462,45 @@
             </div>
         </div>
     </div>
-    @include('partials.script-ajuan')
+
+    <style>
+        .form-step {
+            display: none;
+        }
+
+        .form-step.active {
+            display: block;
+        }
+
+        .step-indicator {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            border: 2px solid #E5E7EB;
+            background-color: white;
+            color: #9CA3AF;
+        }
+
+        .step-indicator.active {
+            background-color: #800000;
+            border-color: #800000;
+            color: white;
+        }
+
+        #ktmUploadArea,
+        #suratUploadArea {
+            transition: all 0.3s ease;
+        }
+
+        #ktmUploadArea.dragover,
+        #suratUploadArea.dragover {
+            border-color: #800000;
+            background-color: #FEF2F2;
+        }
+    </style>
+    <script src="js/submission.js"></script>
 @endsection

@@ -20,7 +20,7 @@ class LaboratoriumController extends Controller
     public function show($id)
     {
         $lab = Laboratorium::with('fasilitas.barang')->findOrFail($id);
-        return view('pages.detail_lab', compact('lab'));
+        return view('pages.laboratorium-details', compact('lab'));
     }
 
     public function destroy($id)
