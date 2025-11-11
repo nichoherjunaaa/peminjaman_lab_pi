@@ -171,7 +171,7 @@
                                             </div>
                                             <div>
                                                 <div class="text-sm text-gray-500">Pengelola</div>
-                                                <div class="font-medium text-gray-900">Budi Santoso, S.Kom.</div>
+                                                <div class="font-medium text-gray-900">lab.komp@usd.ac.id</div>
                                             </div>
                                         </div>
                                         <div class="flex items-center">
@@ -191,7 +191,7 @@
                                             </div>
                                             <div>
                                                 <div class="text-sm text-gray-500">Email</div>
-                                                <div class="font-medium text-gray-900">labkomp.a@usd.ac.id</div>
+                                                <div class="font-medium text-gray-900">labkomp@usd.ac.id</div>
                                             </div>
                                         </div>
                                     </div>

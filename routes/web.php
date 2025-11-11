@@ -4,6 +4,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LaboratoriumController;
 use App\Http\Controllers\Peminjaman;
 use App\Http\Controllers\PeminjamanController;
+use App\Http\Controllers\QuickBookController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -34,11 +36,13 @@ Route::put('/borrowing/{id}', [PeminjamanController::class, 'update'])->name('bo
 Route::post('/create/store', [PeminjamanController::class, 'store'])->name('peminjaman.store');
 
 // Report
-Route::get('/report', [PeminjamanController::class, 'report'])->name('report');
-
+// Route::get('/report', [PeminjamanController::class, 'report'])->name('report');
+Route::get('/quickbook', [QuickBookController::class, 'index'])->name('quickbook.index');
+Route::post('/quickbook/search', [QuickBookController::class, 'search'])->name('quickbook.search');
 Route::get('/privacy', function () {
     return view('pages.privacy');
 });
+Route::get('/report', [ReportController::class, 'index'])->name('report');
 
 // Fallback route - harus di paling bawah
 Route::fallback(function () {

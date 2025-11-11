@@ -14,7 +14,7 @@ class Laboratorium extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'nama_lab',
+        'nama_laboratorium',
         'lokasi',
         'kapasitas',
         'deskripsi',

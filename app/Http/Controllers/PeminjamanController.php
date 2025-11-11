@@ -69,26 +69,44 @@ class PeminjamanController extends Controller
 
         $user = Auth::user();
 
+        // Cek tabrakan peminjaman yang sudah disetujui
+        $existingBooking = Peminjaman::where('id_laboratorium', $request->id_laboratorium)
+            ->whereDate('tanggal', $request->tanggal)
+            ->where('status', 'approved') // hanya cek yang sudah disetujui
+            ->where(function ($q) use ($request) {
+                $q->whereBetween('jam_mulai', [$request->jam_mulai, $request->jam_selesai])
+                    ->orWhereBetween('jam_selesai', [$request->jam_mulai, $request->jam_selesai])
+                    ->orWhere(function ($q2) use ($request) {
+                        $q2->where('jam_mulai', '<=', $request->jam_mulai)
+                            ->where('jam_selesai', '>=', $request->jam_selesai);
+                    });
+            })
+            ->exists();
+
+        if ($existingBooking) {
+            return back()->with('error', 'Laboratorium sudah dipinjam pada tanggal dan jam yang dipilih. Silakan pilih waktu lain.');
+        }
+
         try {
             Peminjaman::create([
-                'id_peminjam' => $user->username, // ambil dari tabel users, bukan mahasiswa/dosen
-                'peminjam_type' => $user->role, // langsung ambil dari kolom role di tabel users
+                'id_peminjam' => $user->username,
+                'peminjam_type' => $user->role,
                 'id_laboratorium' => $request->id_laboratorium,
                 'tanggal' => $request->tanggal,
                 'jam_mulai' => $request->jam_mulai,
                 'jam_selesai' => $request->jam_selesai,
                 'nama_kegiatan' => $request->nama_kegiatan,
                 'keperluan' => $request->keperluan,
-                'status' => 'pending',
+                'status' => 'pending', // masih pending
                 'created_at' => now(),
             ]);
         } catch (\Exception $e) {
             return back()->with('error', $e->getMessage());
         }
 
-
         return redirect()->route('borrowing.index')->with('success', 'Peminjaman berhasil diajukan!');
     }
+
 
     public function show($id)
     {

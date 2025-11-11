@@ -39,16 +39,16 @@
                     <li class="flex items-start">
                         <i class="fas fa-map-marker-alt text-secondary mr-2 mt-0.5 text-sm"></i>
                         <span class="text-white/80 text-sm">
-                            Jl. Affandi, Mrican, Caturtunggal, Depok, Sleman, Yogyakarta
+                            Jl. Paingan, Krodan, Maguwoharjo, Kec. Depok, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55281
                         </span>
                     </li>
                     <li class="flex items-center">
                         <i class="fas fa-phone text-secondary mr-2 text-sm"></i>
-                        <span class="text-white/80 text-sm">(0274) 513301</span>
+                        <span class="text-white/80 text-sm">(0274) 123456</span>
                     </li>
                     <li class="flex items-center">
                         <i class="fas fa-envelope text-secondary mr-2 text-sm"></i>
-                        <span class="text-white/80 text-sm">info@usd.ac.id</span>
+                        <span class="text-white/80 text-sm">informatika@usd.ac.id</span>
                     </li>
                 </ul>
             </div>

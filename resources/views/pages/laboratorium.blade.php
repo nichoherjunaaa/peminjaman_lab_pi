@@ -12,10 +12,10 @@
                     <p class="mt-2 text-gray-600">Daftar laboratorium yang tersedia</p>
                 </div>
                 <div class="mt-4 sm:mt-0 flex space-x-3">
-                    <button class="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg flex items-center">
+                    <a href="{{ route('quickbook.index') }}" class="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg flex items-center">
                         <i class="fas fa-magnifying-glass mr-2"></i>
                         Quick Book
-                    </button>
+                    </a>
                     @if (Auth::check() && Auth::user()->isAdmin())
                         <button class="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg flex items-center">
                             <i class="fas fa-plus mr-2"></i>

@@ -34,11 +34,12 @@
                     <!-- Laboratorium -->
                     <div>
                         <label for="lab_id" class="block text-sm font-medium text-gray-700 mb-1">Laboratorium</label>
-                        <select name="laboratorium_id" id="lab_id"
+                        <select name="id_laboratorium" id="lab_id"
                             class="w-full border-gray-300 rounded-md shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50">
-                            <option value="all" {{ request('laboratorium_id') == 'all' ? 'selected' : '' }}>Semua Laboratorium</option>
+                            <option value="all" {{ request('id_laboratorium') == 'all' ? 'selected' : '' }}>Semua Laboratorium
+                            </option>
                             @foreach($laboratoriums as $lab)
-                                <option value="{{ $lab->laboratorium_id }}" {{ request('lab_id') == $lab->laboratorium_id ? 'selected' : '' }}>
+                                <option value="{{ $lab->id_laboratorium }}" {{ request('id_laboratorium') == $lab->id_laboratorium ? 'selected' : '' }}>
                                     {{ $lab->nama_laboratorium }}
                                 </option>
                             @endforeach
@@ -70,7 +71,6 @@
                     </div>
                 </form>
             </div>
-
 
             <!-- Stats Cards -->
             <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-8">
@@ -104,7 +104,7 @@
                                 <dl>
                                     <dt class="text-sm font-medium text-gray-500 truncate">Rata-rata Penggunaan</dt>
                                     <dd>
-                                        <div class="text-lg font-medium text-gray-900">72%</div>
+                                        <div class="text-lg font-medium text-gray-900">{{ $usageRate }}%</div>
                                     </dd>
                                 </dl>
                             </div>
@@ -123,7 +123,7 @@
                                 <dl>
                                     <dt class="text-sm font-medium text-gray-500 truncate">Lab Paling Populer</dt>
                                     <dd>
-                                        <div class="text-lg font-medium text-gray-900">Lab. Komputer A</div>
+                                        <div class="text-lg font-medium text-gray-900">{{ $popularLab }}</div>
                                     </dd>
                                 </dl>
                             </div>
@@ -142,7 +142,7 @@
                                 <dl>
                                     <dt class="text-sm font-medium text-gray-500 truncate">Waktu Paling Sering</dt>
                                     <dd>
-                                        <div class="text-lg font-medium text-gray-900">08:00-10:00</div>
+                                        <div class="text-lg font-medium text-gray-900">{{ $popularTime }}</div>
                                     </dd>
                                 </dl>
                             </div>
@@ -238,31 +238,50 @@
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    1
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-gray-900">Lab. Komputer Dasar A</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">Alfeus Galih</div>
-                                    <div class="text-sm text-gray-500">Informatika</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">15 Des 2025</div>
-                                    <div class="text-sm text-gray-500">08:00 - 10:00</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    Praktikum Basis Data
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span
-                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                        Disetujui
-                                    </span>
-                                </td>
-                            </tr>
+                            @foreach($peminjamanData as $index => $peminjaman)
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {{ ($peminjamanData->currentPage() - 1) * $peminjamanData->perPage() + $index + 1 }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-gray-900">
+                                            {{ $peminjaman->laboratorium->nama_laboratorium }}</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">{{ $peminjaman->peminjam->nama ?? 'N/A' }}</div>
+                                        <div class="text-sm text-gray-500">{{ $peminjaman->user->program_studi ?? 'N/A' }}</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">
+                                            {{ \Carbon\Carbon::parse($peminjaman->tanggal)->format('d M Y') }}</div>
+                                        <div class="text-sm text-gray-500">{{ $peminjaman->jam_mulai }} -
+                                            {{ $peminjaman->jam_selesai }}</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {{ $peminjaman->nama_kegiatan }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        @php
+                                            $statusColors = [
+                                                'approved' => 'bg-green-100 text-green-800',
+                                                'pending' => 'bg-yellow-100 text-yellow-800',
+                                                'rejected' => 'bg-red-100 text-red-800',
+                                                'done' => 'bg-blue-100 text-blue-800'
+                                            ];
+                                            $statusLabels = [
+                                                'approved' => 'Disetujui',
+                                                'pending' => 'Pending',
+                                                'rejected' => 'Ditolak',
+                                                'done' => 'Selesai'
+                                            ];
+                                        @endphp
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $statusColors[$peminjaman->status] ?? 'bg-gray-100 text-gray-800' }}">
+                                            {{ $statusLabels[$peminjaman->status] ?? $peminjaman->status }}
+                                        </span>
+                                    </td>
+                                </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -271,28 +290,150 @@
                         <div class="flex items-center">
                             <p class="text-sm text-gray-700">
                                 Menampilkan
-                                <span class="font-medium">1</span>
+                                <span class="font-medium">{{ $peminjamanData->firstItem() }}</span>
                                 sampai
-                                <span class="font-medium">4</span>
+                                <span class="font-medium">{{ $peminjamanData->lastItem() }}</span>
                                 dari
-                                <span class="font-medium">156</span>
+                                <span class="font-medium">{{ $peminjamanData->total() }}</span>
                                 hasil
                             </p>
                         </div>
                         <div class="flex space-x-2">
-                            <button
-                                class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
-                                Sebelumnya
-                            </button>
-                            <button
-                                class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
-                                Selanjutnya
-                            </button>
+                            {{ $peminjamanData->links() }}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <script src="js/report.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Chart 1: Peminjaman per Bulan
+            const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
+            const monthlyChart = new Chart(monthlyCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
+                    datasets: [{
+                        label: 'Jumlah Peminjaman',
+                        data: @json($monthlyData),
+                        borderColor: '#800000',
+                        backgroundColor: 'rgba(128, 0, 0, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 5
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Chart 2: Distribusi per Laboratorium
+            const labDistributionCtx = document.getElementById('labDistributionChart').getContext('2d');
+            const labDistributionChart = new Chart(labDistributionCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: @json($labDistribution->pluck('nama_laboratorium')),
+                    datasets: [{
+                        data: @json($labDistribution->pluck('count')),
+                        backgroundColor: [
+                            '#800000',
+                            '#E0862F',
+                            '#4A5568',
+                            '#38A169',
+                            '#3182CE',
+                            '#805AD5',
+                            '#DD6B20'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right'
+                        }
+                    }
+                }
+            });
+
+            // Chart 3: Status Peminjaman
+            const statusCtx = document.getElementById('statusChart').getContext('2d');
+            const statusChart = new Chart(statusCtx, {
+                type: 'bar',
+                data: {
+                    labels: @json(array_keys($statusDistribution)),
+                    datasets: [{
+                        label: 'Jumlah',
+                        data: @json(array_values($statusDistribution)),
+                        backgroundColor: [
+                            '#38A169',
+                            '#D69E2E',
+                            '#E53E3E',
+                            '#3182CE'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 5
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Chart 4: Peminjaman per Hari
+            const dayOfWeekCtx = document.getElementById('dayOfWeekChart').getContext('2d');
+            const dayOfWeekChart = new Chart(dayOfWeekCtx, {
+                type: 'bar',
+                data: {
+                    labels: @json($dayOfWeekData['labels']),
+                    datasets: [{
+                        label: 'Jumlah Peminjaman',
+                        data: @json($dayOfWeekData['data']),
+                        backgroundColor: '#800000',
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        });
+    </script>
 @endsection

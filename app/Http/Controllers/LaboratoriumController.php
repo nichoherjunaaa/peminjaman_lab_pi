@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Laboratorium;
+use App\Models\Peminjaman;
+use Request;
 
 class LaboratoriumController extends Controller
 {
@@ -55,6 +57,5 @@ class LaboratoriumController extends Controller
 
         return response()->json($data);
     }
-
 }
 

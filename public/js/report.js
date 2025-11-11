@@ -34,7 +34,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Chart 2: Distribusi per Laboratorium
     const labDistributionCtx = document.getElementById('labDistributionChart').getContext('2d');
     const labDistributionChart = new Chart(labDistributionCtx, {
         type: 'doughnut',

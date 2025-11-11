@@ -60,9 +60,23 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Form Peminjaman -->
             <div class="bg-white p-6 rounded-lg shadow">
+                @if ($errors->any())
+                    <div class="mb-4 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg">
+                        <ul class="list-disc list-inside">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                @if (session('error'))
+                    <div class="mb-4 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg">
+                        {{ session('error') }}
+                    </div>
+                @endif
+                
                 <form id="peminjamanForm" action="{{ route('peminjaman.store') }}" method="POST"
                     enctype="multipart/form-data">
                     @csrf

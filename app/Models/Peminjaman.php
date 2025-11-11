@@ -24,6 +24,7 @@ class Peminjaman extends Model
         'nama_kegiatan',
         'keperluan',
         'status',
+        'alasan_penolakan',
         'created_at',
     ];
 
