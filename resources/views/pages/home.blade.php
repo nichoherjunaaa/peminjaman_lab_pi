@@ -11,19 +11,9 @@
                 <p class="mt-2 text-gray-600">Selamat datang di Sistem Peminjaman Laboratorium</p>
             </div>
 
-            <!-- Stats Cards -->
-            <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-8">
-                <x-stats-card icon="fas fa-calendar-check" title="Total Peminjaman" value="{{ $peminjaman->count() }}"
-                    color="primary" />
-
-                <x-stats-card icon="fas fa-clock" title="Peminjaman Aktif"
-                    value="{{ $peminjaman->where('tanggal', '>=', now())->count() }}" color="secondary" />
-
-                <x-stats-card icon="fas fa-building" title="Laboratorium Tersedia" value="{{ $laboratorium_tersedia}}"
-                    color="primary" />
-
-                <x-stats-card icon="fas fa-hourglass-half" title="Menunggu Persetujuan"
-                    value="{{ $peminjaman->where('status', 'pending')->count() }}" color="secondary" />
+            {{-- map laboratorium --}}
+            <div class="flex justify-center items-center w-full">
+                <img src="{{ asset('images/USD500.png') }}" alt="">
             </div>
 
             <!-- Quick Actions -->

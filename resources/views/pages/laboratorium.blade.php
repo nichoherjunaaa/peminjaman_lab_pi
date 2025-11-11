@@ -17,10 +17,13 @@
                         Quick Book
                     </a>
                     @if (Auth::check() && Auth::user()->isAdmin())
-                        <button class="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg flex items-center">
-                            <i class="fas fa-plus mr-2"></i>
-                            Tambah Lab
-                        </button>
+                        <a href="{{ route('laboratorium.create') }}">
+                            <button
+                                class="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg flex items-center">
+                                <i class="fas fa-plus mr-2"></i>
+                                Tambah Lab
+                            </button>
+                        </a>
                     @endif
                 </div>
             </div>
@@ -39,7 +42,7 @@
                                     <dt class="text-sm font-medium text-gray-500 truncate">Total Laboratorium</dt>
                                     <dd>
                                         <div class="text-lg font-medium text-gray-900">
-                                            {{ $laboratorium->total()}}
+                                            {{ $laboratorium->total() }}
                                         </div>
                                     </dd>
                                 </dl>
@@ -136,7 +139,7 @@
                         <label class="block text-sm font-medium text-gray-700 mb-1">Lokasi</label>
                         <select class="w-full border border-gray-300 rounded-lg px-3 py-2">
                             <option value="">Semua Lokasi</option>
-                            @foreach($lokasiOnly as $lab)
+                            @foreach ($lokasiOnly as $lab)
                                 <option value="{{ $lab->lokasi }}">{{ $lab->lokasi }}</option>
                             @endforeach
                         </select>
@@ -160,7 +163,7 @@
                                             'dalam perawatan' => 'bg-yellow-100 text-yellow-800',
                                             default => 'bg-gray-100 text-gray-800',
                                         };
-                                        
+
                                         $statusText = match ($lab->status) {
                                             'tersedia' => 'Tersedia',
                                             'tidak tersedia' => 'Tidak Tersedia',
@@ -169,7 +172,8 @@
                                         };
                                     @endphp
 
-                                    <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full {{ $statusClass }} mt-1">
+                                    <span
+                                        class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full {{ $statusClass }} mt-1">
                                         {{ $statusText }}
                                     </span>
                                 </div>
@@ -187,11 +191,12 @@
                                 <div class="flex items-center">
                                     <i class="fas fa-tools mr-2 text-primary"></i>
                                     <div>
-                                        @if($lab->fasilitas->isNotEmpty())
+                                        @if ($lab->fasilitas->isNotEmpty())
                                             <ul class="list-disc list-inside text-sm text-gray-600">
-                                                @foreach($lab->fasilitas as $fas)
+                                                @foreach ($lab->fasilitas as $fas)
                                                     <span>{{ $fas->jumlah }}
-                                                        {{ $fas->barang->nama_barang ?? 'Barang tidak ditemukan' }}, </span>
+                                                        {{ $fas->barang->nama_barang ?? 'Barang tidak ditemukan' }},
+                                                    </span>
                                                 @endforeach
                                             </ul>
                                         @else
@@ -211,12 +216,12 @@
                                     <i class="fas fa-eye mr-1"></i> Detail
                                 </a>
 
-                                @if(Auth::check() && Auth::user()->isAdmin())
+                                @if (Auth::check() && Auth::user()->isAdmin())
                                     <a href="{{ route('edit.laboratorium', $lab->id_laboratorium) }}"
                                         class="flex-1 bg-primary text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-primary-dark inline-flex items-center justify-center">
                                         <i class="fas fa-edit mr-1"></i> Edit
                                     </a>
-                                    <button type="button" 
+                                    <button type="button"
                                         class="btn-delete flex-1 border border-primary text-primary text-center py-2 px-4 rounded-lg text-sm font-medium hover:bg-primary hover:text-white"
                                         data-lab-id="{{ $lab->id_laboratorium }}"
                                         data-lab-name="{{ $lab->nama_laboratorium }}">
@@ -230,7 +235,8 @@
             </div>
 
             <!-- Pagination -->
-            <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6 rounded-lg shadow">
+            <div
+                class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6 rounded-lg shadow">
                 <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
                     <div>
                         <p class="text-sm text-gray-700">
@@ -303,7 +309,8 @@
                             class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
                             Batal
                         </button>
-                        <button type="button" id="confirmDelete" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+                        <button type="button" id="confirmDelete"
+                            class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
                             Ya, Hapus
                         </button>
                     </div>
@@ -314,18 +321,18 @@
 
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             var labIdToDelete = null;
 
             // Set CSRF token untuk semua AJAX request
             $.ajaxSetup({
-                headers: { 
+                headers: {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 }
             });
 
             // Klik tombol Hapus → tampilkan modal
-            $(document).on('click', '.btn-delete', function () {
+            $(document).on('click', '.btn-delete', function() {
                 labIdToDelete = $(this).data('lab-id');
                 var labName = $(this).data('lab-name');
 
@@ -337,41 +344,43 @@
             });
 
             // Klik Batal → tutup modal
-            $('#cancelDelete').on('click', function () {
+            $('#cancelDelete').on('click', function() {
                 $('#deleteModal').removeClass('flex').addClass('hidden');
                 labIdToDelete = null;
             });
 
             // Klik Konfirmasi Hapus → kirim AJAX
-            $('#confirmDelete').on('click', function () {
+            $('#confirmDelete').on('click', function() {
                 if (!labIdToDelete) return;
 
                 // Tampilkan loading state
-                $(this).html('<i class="fas fa-spinner fa-spin mr-1"></i> Menghapus...').prop('disabled', true);
+                $(this).html('<i class="fas fa-spinner fa-spin mr-1"></i> Menghapus...').prop('disabled',
+                    true);
 
                 $.ajax({
                     url: '/laboratorium/' + labIdToDelete,
                     type: 'DELETE',
-                    success: function (response) {
+                    success: function(response) {
                         // Tutup modal
                         $('#deleteModal').removeClass('flex').addClass('hidden');
-                        
+
                         // Tampilkan pesan sukses
                         showAlert('success', 'Laboratorium berhasil dihapus');
-                        
+
                         // Hapus card dari DOM
-                        $(`[data-lab-id="${labIdToDelete}"]`).closest('.bg-white').fadeOut(300, function() {
-                            $(this).remove();
-                            // Optional: reload halaman jika perlu
-                            // location.reload();
-                        });
+                        $(`[data-lab-id="${labIdToDelete}"]`).closest('.bg-white').fadeOut(300,
+                            function() {
+                                $(this).remove();
+                                // Optional: reload halaman jika perlu
+                                // location.reload();
+                            });
                     },
-                    error: function (xhr) {
+                    error: function(xhr) {
                         console.error('Error:', xhr);
-                        
+
                         // Reset button state
                         $('#confirmDelete').html('Ya, Hapus').prop('disabled', false);
-                        
+
                         // Tampilkan pesan error
                         let errorMessage = 'Gagal menghapus laboratorium.';
                         if (xhr.responseJSON && xhr.responseJSON.message) {
@@ -387,14 +396,14 @@
 
             // Fungsi untuk menampilkan alert
             function showAlert(type, message) {
-                const alertClass = type === 'success' ? 
-                    'bg-green-50 border-green-200 text-green-700' : 
+                const alertClass = type === 'success' ?
+                    'bg-green-50 border-green-200 text-green-700' :
                     'bg-red-50 border-red-200 text-red-700';
-                
-                const icon = type === 'success' ? 
-                    '<i class="fas fa-check-circle mr-2"></i>' : 
+
+                const icon = type === 'success' ?
+                    '<i class="fas fa-check-circle mr-2"></i>' :
                     '<i class="fas fa-exclamation-circle mr-2"></i>';
-                
+
                 const alertHtml = `
                     <div class="fixed top-4 right-4 ${alertClass} border px-6 py-4 rounded-lg shadow-lg z-50 fade-in">
                         <div class="flex items-center">
@@ -403,9 +412,9 @@
                         </div>
                     </div>
                 `;
-                
+
                 $('body').append(alertHtml);
-                
+
                 // Auto remove setelah 5 detik
                 setTimeout(() => {
                     $('.fade-in').fadeOut(300, function() {
@@ -428,19 +437,26 @@
         .fade-in {
             animation: fadeIn 0.3s ease-in;
         }
-        
+
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-        
+
         .card-hover {
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
-        
+
         .card-hover:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
     </style>
 @endsection
