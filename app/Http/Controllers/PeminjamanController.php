@@ -11,12 +11,17 @@ use Illuminate\Support\Facades\Validator;
 
 class PeminjamanController extends Controller
 {
-    public function create()
-    {
-        $laboratorium = Laboratorium::all();
-        return view('pages.submission', compact('laboratorium'));
-    }
+   public function create(Request $request)
+{
+    $lab_id = $request->query('lab_id') ?? 0;
+    $tanggal = $request->query('tanggal') ?? date('Y-m-d') ;
+    $jam_mulai = $request->query('jam_mulai')?? '00:00';
+    $jam_selesai = $request->query('jam_selesai')??'00:00';
 
+    $laboratorium = Laboratorium::all();
+
+    return view('pages.submission', compact('laboratorium', 'lab_id', 'tanggal', 'jam_mulai', 'jam_selesai'));
+}
 public function index(Request $request)
 {
     // Ambil data unik untuk dropdown filter

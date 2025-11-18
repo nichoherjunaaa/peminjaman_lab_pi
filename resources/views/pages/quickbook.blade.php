@@ -2,7 +2,7 @@
 
 @section('title', 'Quickbook Laboratorium - Sistem Peminjaman Laboratorium')
 
-@section("content")
+@section('content')
     <div class="py-6">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
             <!-- Search Form -->
@@ -28,7 +28,7 @@
                             <select id="labName"
                                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary">
                                 <option value="">Semua Laboratorium</option>
-                                @foreach($list_laboratorium as $lab)
+                                @foreach ($list_laboratorium as $lab)
                                     <option value="{{ $lab->id_laboratorium }}">{{ $lab->nama_laboratorium }}</option>
                                 @endforeach
                             </select>
@@ -87,19 +87,24 @@
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Nama Laboratorium
                                     </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Lokasi
                                     </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Kapasitas
                                     </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Waktu Tersedia
                                     </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Aksi
                                     </th>
                                 </tr>
@@ -153,14 +158,17 @@
         .table-row-hover:hover {
             background-color: #f9fafb;
         }
+
         .status-available {
             background-color: #dcfce7;
             color: #166534;
         }
+
         .status-booked {
             background-color: #fee2e2;
             color: #991b1b;
         }
+
         .status-default {
             background-color: #e5e7eb;
             color: #374151;
@@ -168,17 +176,17 @@
     </style>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             // Set default date to today
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('searchDate').value = today;
 
             // Search button functionality
-            document.getElementById('searchButton').addEventListener('click', function () {
+            document.getElementById('searchButton').addEventListener('click', function() {
                 const tanggal = document.getElementById('searchDate').value;
                 const labName = document.getElementById('labName').value;
                 const timeSlot = document.getElementById('timeSlot').value;
-                
+
                 // Show loading state
                 const searchButton = document.getElementById('searchButton');
                 const originalText = searchButton.innerHTML;
@@ -186,80 +194,86 @@
                 searchButton.disabled = true;
 
                 fetch("{{ route('quickbook.search') }}", {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({
-                        tanggal: tanggal,
-                        lab_name: labName,
-                        time_slot: timeSlot
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            tanggal: tanggal,
+                            lab_name: labName,
+                            time_slot: timeSlot
+                        })
                     })
-                })
-                .then(async res => {
-                    const data = await res.json();
+                    .then(async res => {
+                        const data = await res.json();
 
-                    if (!res.ok) {
-                        throw new Error(data.message || 'Network response was not ok');
-                    }
+                        if (!res.ok) {
+                            throw new Error(data.message || 'Network response was not ok');
+                        }
 
-                    return data;
-                })
-                .then(data => {
-                    const resultsSection = document.getElementById('resultsSection');
-                    const resultsTableBody = document.getElementById('resultsTableBody');
-                    const noResults = document.getElementById('noResults');
-                    const filterDate = document.getElementById('filterDate');
-                    const filterLab = document.getElementById('filterLab');
-                    const filterTime = document.getElementById('filterTime');
+                        return data;
+                    })
+                    .then(data => {
+                        const resultsSection = document.getElementById('resultsSection');
+                        const resultsTableBody = document.getElementById('resultsTableBody');
+                        const noResults = document.getElementById('noResults');
+                        const filterDate = document.getElementById('filterDate');
+                        const filterLab = document.getElementById('filterLab');
+                        const filterTime = document.getElementById('filterTime');
 
-                    // Reset button
-                    searchButton.innerHTML = originalText;
-                    searchButton.disabled = false;
+                        // Reset button
+                        searchButton.innerHTML = originalText;
+                        searchButton.disabled = false;
 
-                    if (!data.success) {
-                        alert('Error: ' + data.message);
-                        return;
-                    }
+                        if (!data.success) {
+                            alert('Error: ' + data.message);
+                            return;
+                        }
 
-                    // Format date for display
-                    const formatDate = (dateString) => {
-                        if (!dateString) return '-';
-                        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-                        const date = new Date(dateString);
-                        return date.toLocaleDateString('id-ID', options);
-                    };
+                        // Format date for display
+                        const formatDate = (dateString) => {
+                            if (!dateString) return '-';
+                            const options = {
+                                weekday: 'long',
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric'
+                            };
+                            const date = new Date(dateString);
+                            return date.toLocaleDateString('id-ID', options);
+                        };
 
-                    // Update filter display
-                    filterDate.textContent = tanggal ? formatDate(tanggal) : '-';
-                    
-                    const labSelect = document.getElementById('labName');
-                    const selectedLabText = labName ? labSelect.options[labSelect.selectedIndex].text : 'Semua Laboratorium';
-                    filterLab.textContent = selectedLabText;
-                    
-                    filterTime.textContent = timeSlot ? timeSlot : 'Semua Waktu';
+                        // Update filter display
+                        filterDate.textContent = tanggal ? formatDate(tanggal) : '-';
 
-                    // Clear previous results
-                    resultsTableBody.innerHTML = '';
+                        const labSelect = document.getElementById('labName');
+                        const selectedLabText = labName ? labSelect.options[labSelect.selectedIndex]
+                            .text : 'Semua Laboratorium';
+                        filterLab.textContent = selectedLabText;
 
-                    if (data.data && data.data.length > 0) {
-                        resultsSection.classList.remove('hidden');
-                        noResults.classList.add('hidden');
+                        filterTime.textContent = timeSlot ? timeSlot : 'Semua Waktu';
 
-                        // Populate table with results - setiap baris adalah lab + waktu
-                        data.data.forEach(lab => {
-                            let statusClass = 'status-default';
-                            if (lab.status_color === 'available') {
-                                statusClass = 'status-available';
-                            } else if (lab.status_color === 'booked') {
-                                statusClass = 'status-booked';
-                            }
+                        // Clear previous results
+                        resultsTableBody.innerHTML = '';
 
-                            const row = document.createElement('tr');
-                            row.className = 'table-row-hover';
+                        if (data.data && data.data.length > 0) {
+                            resultsSection.classList.remove('hidden');
+                            noResults.classList.add('hidden');
 
-                            row.innerHTML = `
+                            // Populate table with results - setiap baris adalah lab + waktu
+                            data.data.forEach(lab => {
+                                let statusClass = 'status-default';
+                                if (lab.status_color === 'available') {
+                                    statusClass = 'status-available';
+                                } else if (lab.status_color === 'booked') {
+                                    statusClass = 'status-booked';
+                                }
+
+                                const row = document.createElement('tr');
+                                row.className = 'table-row-hover';
+
+                                row.innerHTML = `
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center">
                                         <div class="ml-4">
@@ -280,45 +294,54 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     ${lab.status_color === 'available' ? 
-                                        `<button class="bg-primary hover:bg-red-800 text-white px-4 py-2 rounded-lg transition-colors flex items-center" 
-                                            onclick="pinjamLaboratorium('${lab.id_laboratorium}', '${lab.jam_mulai}', '${lab.jam_selesai}')">
-                                            Pinjam
-                                        </button>` : 
+                                        `
+                                            <button class="bg-primary hover:bg-red-800 text-white px-4 py-2 rounded-lg transition-colors flex items-center" 
+                                             data-id="${lab.id_laboratorium}"
+                                             data-jammulai="${lab.jam_mulai}"
+                                             data-jamselesai="${lab.jam_selesai}"
+                                             onclick="pinjamLaboratorium(this)">
+                                            
+                                                Pinjam
+                                            </button>
+                                            ` : 
                                         `<button class="bg-gray-400 text-white px-4 py-2 rounded-lg cursor-not-allowed" disabled>
-                                            <i class="fas fa-times mr-2"></i>
-                                            Tidak Tersedia
-                                        </button>`
+                                                <i class="fas fa-times mr-2"></i>
+                                                Tidak Tersedia
+                                            </button>`
                                     }
                                 </td>
                             `;
 
-                            resultsTableBody.appendChild(row);
-                        });
-                    } else {
-                        resultsSection.classList.remove('hidden');
-                        noResults.classList.remove('hidden');
-                    }
-                })
-                .catch(err => {
-                    console.error('Error:', err);
-                    searchButton.innerHTML = originalText;
-                    searchButton.disabled = false;
-                    alert('Terjadi kesalahan saat mencari laboratorium: ' + err.message);
-                });
+                                resultsTableBody.appendChild(row);
+                            });
+                        } else {
+                            resultsSection.classList.remove('hidden');
+                            noResults.classList.remove('hidden');
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Error:', err);
+                        searchButton.innerHTML = originalText;
+                        searchButton.disabled = false;
+                        alert('Terjadi kesalahan saat mencari laboratorium: ' + err.message);
+                    });
             });
         });
 
         // Function to handle booking dengan waktu spesifik
-        function pinjamLaboratorium(labId, jamMulai, jamSelesai) {
+        function pinjamLaboratorium(button) {
             const tanggal = document.getElementById('searchDate').value;
-
-            if (!tanggal) {
+              if (!tanggal) {
                 alert('Silakan pilih tanggal terlebih dahulu');
                 return;
             }
+              const labId = button.getAttribute('data-id');
+            const jamMulai = button.getAttribute('data-jammulai');
+            const jamSelesai = button.getAttribute('data-jamselesai');
 
             // Redirect to booking page dengan parameter waktu
-            window.location.href = `/peminjaman/create?lab_id=${labId}&tanggal=${tanggal}&jam_mulai=${jamMulai}&jam_selesai=${jamSelesai}`;
+            window.location.href =`/create?lab_id=${labId}&tanggal=${tanggal}&jam_mulai=${jamMulai}&jam_selesai=${jamSelesai}`;
         }
+
     </script>
 @endsection

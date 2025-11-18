@@ -31,7 +31,7 @@ Route::get('/laboratorium-add',function(){
     return view('pages.laboratorium-add');
 })->name('laboratorium.create');
 
-
+// peminjaman
 Route::get('/borrowing/{id}', [PeminjamanController::class, 'show'])->name('borrowing-details');
 Route::get('/borrowing', [PeminjamanController::class, 'index'])->name('borrowing.index');
 Route::get('/create', [PeminjamanController::class, 'create'])->name('booking.form');
