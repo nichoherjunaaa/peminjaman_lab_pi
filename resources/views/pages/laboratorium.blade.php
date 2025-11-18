@@ -115,37 +115,6 @@
                 </div>
             </div>
 
-            <!-- Search and Filter -->
-            <div class="bg-white p-4 rounded-lg shadow mb-6">
-                <div class="flex flex-col sm:flex-row gap-4">
-                    <div class="flex-1">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Cari Laboratorium</label>
-                        <div class="relative">
-                            <input type="text" class="w-full border border-gray-300 rounded-lg px-3 py-2 pl-10"
-                                placeholder="Cari laboratorium...">
-                            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-                        </div>
-                    </div>
-                    <div class="flex-1">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                        <select class="w-full border border-gray-300 rounded-lg px-3 py-2">
-                            <option value="">Semua Status</option>
-                            <option value="available">Tersedia</option>
-                            <option value="maintenance">Dalam Perawatan</option>
-                            <option value="unavailable">Tidak Tersedia</option>
-                        </select>
-                    </div>
-                    <div class="flex-1">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Lokasi</label>
-                        <select class="w-full border border-gray-300 rounded-lg px-3 py-2">
-                            <option value="">Semua Lokasi</option>
-                            @foreach ($lokasiOnly as $lab)
-                                <option value="{{ $lab->lokasi }}">{{ $lab->lokasi }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-            </div>
 
             <!-- Laboratorium Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">

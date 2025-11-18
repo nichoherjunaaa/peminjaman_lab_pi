@@ -70,7 +70,7 @@
             @endif
 
             {{-- Table Content --}}
-            <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+            <div class="bg-white shadow overflow-hidden sm:rounded-lg mb-5">
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
@@ -103,14 +103,13 @@
                         </thead>
 
                         <tbody class="bg-white divide-y divide-gray-200">
-                            @foreach ($list_peminjaman as $book)
+                            @forelse ($list_peminjaman as $book)
                                                 <tr class="hover:bg-gray-50 transition">
-                                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500">
                                                         {{ $book->nama_kegiatan }}
                                                     </td>
                                                     <td class="px-6 py-4 whitespace-nowrap">
-                                                        <div class="text-sm text-gray-900">{{ $book->laboratorium->nama_laboratorium }}
-                                                        </div>
+                                                        <div class="text-sm text-gray-900">{{ $book->laboratorium->nama_laboratorium }}</div>
                                                         <div class="text-sm text-gray-500">{{ $book->laboratorium->lokasi }}</div>
                                                     </td>
                                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -143,8 +142,15 @@
                                                         </a>
                                                     </td>
                                                 </tr>
-                            @endforeach
+                            @empty
+                                <tr>
+                                    <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                                        Data tidak ditemukan
+                                    </td>
+                                </tr>
+                            @endforelse
                         </tbody>
+
                     </table>
                 </div>
             </div>
@@ -152,69 +158,67 @@
 
             </tbody>
             </table>
-        </div>
-        <!-- Pagination -->
-        <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
-            <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-                <div>
-                    <p class="text-sm text-gray-700">
-                        Menampilkan
-                        <span class="font-medium">{{ $list_peminjaman->firstItem() }}</span>
-                        sampai
-                        <span class="font-medium">{{ $list_peminjaman->lastItem() }}</span>
-                        dari
-                        <span class="font-medium">{{ $list_peminjaman->total() }}</span>
-                        hasil
-                    </p>
-                </div>
-                <div>
-                    <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+            <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+                <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                    <div>
+                        <p class="text-sm text-gray-700">
+                            Menampilkan
+                            <span class="font-medium">{{ $list_peminjaman->firstItem() }}</span>
+                            sampai
+                            <span class="font-medium">{{ $list_peminjaman->lastItem() }}</span>
+                            dari
+                            <span class="font-medium">{{ $list_peminjaman->total() }}</span>
+                            hasil
+                        </p>
+                    </div>
+                    <div>
+                        <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
 
-                        @if ($list_peminjaman->onFirstPage())
-                            <span
-                                class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-gray-100 text-sm font-medium text-gray-400 cursor-not-allowed">
-                                <i class="fas fa-chevron-left"></i>
-                            </span>
-                        @else
-                            <a href="{{ $list_peminjaman->previousPageUrl() }}"
-                                class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                                <i class="fas fa-chevron-left"></i>
-                            </a>
-                        @endif
-
-                        @foreach ($list_peminjaman->getUrlRange(1, $list_peminjaman->lastPage()) as $page => $url)
-                            @if ($page == $list_peminjaman->currentPage())
+                            @if ($list_peminjaman->onFirstPage())
                                 <span
-                                    class="z-10 bg-primary border-primary text-white relative inline-flex items-center px-4 py-2 border text-sm font-medium">
-                                    {{ $page }}
+                                    class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-gray-100 text-sm font-medium text-gray-400 cursor-not-allowed">
+                                    <i class="fas fa-chevron-left"></i>
                                 </span>
                             @else
-                                <a href="{{ $url }}"
-                                    class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
-                                    {{ $page }}
+                                <a href="{{ $list_peminjaman->previousPageUrl() }}"
+                                    class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                    <i class="fas fa-chevron-left"></i>
                                 </a>
                             @endif
-                        @endforeach
 
-                        {{-- Tombol Next --}}
-                        @if ($list_peminjaman->hasMorePages())
-                            <a href="{{ $list_peminjaman->nextPageUrl() }}"
-                                class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                                <i class="fas fa-chevron-right"></i>
-                            </a>
-                        @else
-                            <span
-                                class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-gray-100 text-sm font-medium text-gray-400 cursor-not-allowed">
-                                <i class="fas fa-chevron-right"></i>
-                            </span>
-                        @endif
+                            @foreach ($list_peminjaman->getUrlRange(1, $list_peminjaman->lastPage()) as $page => $url)
+                                @if ($page == $list_peminjaman->currentPage())
+                                    <span
+                                        class="z-10 bg-primary border-primary text-white relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                                        {{ $page }}
+                                    </span>
+                                @else
+                                    <a href="{{ $url }}"
+                                        class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                                        {{ $page }}
+                                    </a>
+                                @endif
+                            @endforeach
 
-                    </nav>
+                            {{-- Tombol Next --}}
+                            @if ($list_peminjaman->hasMorePages())
+                                <a href="{{ $list_peminjaman->nextPageUrl() }}"
+                                    class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                    <i class="fas fa-chevron-right"></i>
+                                </a>
+                            @else
+                                <span
+                                    class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-gray-100 text-sm font-medium text-gray-400 cursor-not-allowed">
+                                    <i class="fas fa-chevron-right"></i>
+                                </span>
+                            @endif
+
+                        </nav>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    </div>
+        <!-- Pagination -->
     </div>
     <script src="js/borrowing.js"></script>
 @endsection

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Laboratorium;
 use App\Models\Peminjaman;
-use Request;
+use Illuminate\Http\Request;
 
 class LaboratoriumController extends Controller
 {
@@ -57,5 +57,36 @@ class LaboratoriumController extends Controller
 
         return response()->json($data);
     }
+    public function edit($id)
+    {
+        $data = Laboratorium::find($id); // Ambil model sesuai id
+        if (!$data) {
+            return redirect()->back()->with('error', 'Data tidak ditemukan');
+        }
+        return view('pages.laboratorium-edit', compact('data'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        // dd($request->all()); // cek data dulu
+
+        $data = Laboratorium::find($id);
+        if (!$data) {
+            return redirect()->back()->with('error', 'Data tidak ditemukan');
+        }
+
+        $data->update($request->all());
+        return redirect()->route('laboratorium.index')->with('success', 'Data berhasil diupdate');
+    }
+
+    public function store(Request $request)
+    {
+        dd(request()->all());
+        $data = new Laboratorium();
+        $data->fill($request->all());
+        $data->save();
+        return redirect()->route('laboratorium.index')->with('success', 'Data berhasil disimpan');
+    }
 }
+
 

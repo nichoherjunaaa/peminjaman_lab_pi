@@ -193,11 +193,11 @@
             <div class="bg-white shadow rounded-lg p-6 mb-8">
                 <h2 class="text-lg font-medium text-gray-900 mb-4">Ekspor Laporan</h2>
                 <div class="flex flex-wrap gap-4">
-                    <button
+                    <a href="{{ route('report.export.excel') }}"
                         class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors duration-200 flex items-center">
                         <i class="fas fa-file-excel mr-2"></i>
-                        Ekspor ke Excel
-                    </button>
+                    Ekspor ke Excel
+                </a>
                 </div>
             </div>
 

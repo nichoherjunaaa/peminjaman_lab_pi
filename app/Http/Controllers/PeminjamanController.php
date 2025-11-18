@@ -17,68 +17,66 @@ class PeminjamanController extends Controller
         return view('pages.submission', compact('laboratorium'));
     }
 
-public function index(Request $request)
-{
-    // Ambil data unik untuk dropdown filter
-    $tanggal_peminjaman = Peminjaman::select('tanggal')
-        ->distinct()
-        ->get();
+    public function index(Request $request)
+    {
+        // Ambil data unik untuk dropdown filter
+        $tanggal_peminjaman = Peminjaman::select('tanggal')
+            ->distinct()
+            ->get();
 
-    $laboratorium = Peminjaman::select('id_laboratorium')
-        ->distinct()
-        ->get();
+        $laboratorium = Peminjaman::select('id_laboratorium')
+            ->distinct()
+            ->get();
 
-    // Ambil user login
-    $user = auth()->user();
-    $admin = $user->role === 'admin';
-    $peminjamKey = $user->username;
+        // Ambil user login
+        $user = auth()->user();
+        $admin = $user->role === 'admin';
+        $peminjamKey = $user->username;
 
-    // Dapatkan nama peminjam berdasarkan role
-    if ($user->isMahasiswa()) {
-        $peminjam = Mahasiswa::where('nim', $peminjamKey)->first();
-        $namaPeminjam = $peminjam->nama ?? 'Tidak Diketahui';
-    } elseif ($user->isDosen()) {
-        $peminjam = Dosen::where('nip', $peminjamKey)->first();
-        $namaPeminjam = $peminjam->nama ?? 'Tidak Diketahui';
-    } elseif ($admin) {
-        $peminjam = null;
-        $namaPeminjam = 'Admin';
-    } else {
-        $peminjam = null;
-        $namaPeminjam = 'Tidak Diketahui';
+        // Dapatkan nama peminjam berdasarkan role
+        if ($user->isMahasiswa()) {
+            $peminjam = Mahasiswa::where('nim', $peminjamKey)->first();
+            $namaPeminjam = $peminjam->nama ?? 'Tidak Diketahui';
+        } elseif ($user->isDosen()) {
+            $peminjam = Dosen::where('nip', $peminjamKey)->first();
+            $namaPeminjam = $peminjam->nama ?? 'Tidak Diketahui';
+        } elseif ($admin) {
+            $peminjam = null;
+            $namaPeminjam = 'Admin';
+        } else {
+            $peminjam = null;
+            $namaPeminjam = 'Tidak Diketahui';
+        }
+
+        if (!$admin && !$peminjam) {
+            return back()->with('error', 'Data peminjam tidak ditemukan.');
+        }
+
+        // Ambil input filter dari request
+        $filterTanggal = $request->input('tanggal');
+        $filterLab = $request->input('laboratorium');
+
+        // Query utama
+        $list_peminjaman = Peminjaman::with(['peminjam', 'laboratorium'])
+            ->when(!$admin, function ($query) use ($peminjamKey) {
+                $query->where('id_peminjam', $peminjamKey);
+            })
+            ->when($filterTanggal, function ($query) use ($filterTanggal) {
+                $query->where('tanggal', $filterTanggal);
+            })
+            ->when($filterLab, function ($query) use ($filterLab) {
+                $query->where('id_laboratorium', $filterLab);
+            })
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+        return view('pages.borrowing', compact(
+            'list_peminjaman',
+            'namaPeminjam',
+            'tanggal_peminjaman',
+            'laboratorium'
+        ));
     }
-
-    if (!$admin && !$peminjam) {
-        return back()->with('error', 'Data peminjam tidak ditemukan.');
-    }
-
-    // Ambil input filter dari request
-    $filterTanggal = $request->input('tanggal');
-    $filterLab = $request->input('laboratorium');
-
-    // Query utama
-    $list_peminjaman = Peminjaman::with(['peminjam', 'laboratorium'])
-        ->when(!$admin, function ($query) use ($peminjamKey) {
-            $query->where('id_peminjam', $peminjamKey);
-        })
-        ->when($filterTanggal, function ($query) use ($filterTanggal) {
-            $query->where('tanggal', $filterTanggal);
-        })
-        ->when($filterLab, function ($query) use ($filterLab) {
-            $query->where('id_laboratorium', $filterLab);
-        })
-        ->orderBy('created_at', 'desc')
-        ->paginate(10);
-
-    return view('pages.borrowing', compact(
-        'list_peminjaman',
-        'namaPeminjam',
-        'tanggal_peminjaman',
-        'laboratorium'
-    ));
-}
-
-
 
     public function store(Request $request)
     {
@@ -146,6 +144,7 @@ public function index(Request $request)
     {
         $peminjaman = Peminjaman::findOrFail($id);
         $peminjaman->status = $request->status;
+        $peminjaman->alasan_penolakan = $request->alasan_penolakan;
         $peminjaman->save();
         return redirect()->route('borrowing.index')->with('success', 'Peminjaman berhasil disetujui!');
     }

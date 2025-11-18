@@ -55,6 +55,7 @@
                                     <input type="text" value="{{ $peminjaman->keperluan }}" disabled
                                         class="w-full border border-gray-300 rounded-lg px-4 py-2 bg-gray-50 text-gray-700" />
                                 </div>
+
                             </div>
 
                             <div class="space-y-4">
@@ -82,7 +83,7 @@
 
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Status Pengajuan</label>
-                                    <select name="status" id="status" @if(auth()->user()->role !== 'admin') disabled @endif 
+                                    <select name="status" id="status" @if(auth()->user()->role !== 'admin') disabled @endif
                                         class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary">
                                         <option value="pending" {{ $peminjaman->status == 'pending' ? 'selected' : '' }}>
                                             Menunggu Review</option>
@@ -92,17 +93,28 @@
                                             Ditolak</option>
                                     </select>
                                 </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                                    <input type="text" value="{{ $peminjaman->peminjam->email }}" disabled
+                                        class="w-full border border-gray-300 rounded-lg px-4 py-2 bg-gray-50 text-gray-700" />
+                                </div>
                             </div>
                         </div>
 
-                        <div id="alasanPenolakanContainer" class="hidden mt-6">
-                            <label for="alasanPenolakan" class="block text-sm font-medium text-gray-700 mb-2">
-                                Alasan Penolakan
-                            </label>
-                            <textarea name="alasan_penolakan" id="alasanPenolakan" rows="3"
-                                placeholder="Jelaskan alasan penolakan pengajuan ini..."
-                                class="w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500 resize-none"></textarea>
-                        </div>
+                        @if ($peminjaman->status === 'rejected')
+                                <div id="alasanPenolakanContainer" class="mt-6">
+                                    <label for="alasanPenolakan" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Alasan Penolakan
+                                    </label>
+
+                                    <textarea name="alasan_penolakan" id="alasanPenolakan" rows="3"
+                                    {{ Auth::user()->role !== 'admin' ? 'disabled' : '' }}
+                                        placeholder="Jelaskan alasan penolakan pengajuan ini..."
+                                        class="w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-700 
+                                        focus:outline-none focus:ring-2 focus:ring-red-500 resize-none">{{ old('alasan_penolakan', $peminjaman->alasan_penolakan) }}</textarea>
+                                </div>
+                        @endif
+
 
                         <div class="flex justify-end mt-8 space-x-4">
                             <a href="{{ route('borrowing.index') }}"
@@ -115,7 +127,6 @@
                                     <i class="fas fa-check-circle mr-2"></i>Submit
                                 </button>
                             @endif
-
                         </div>
                     </form>
                 </div>

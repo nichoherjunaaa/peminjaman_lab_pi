@@ -7,6 +7,9 @@ use App\Models\Peminjaman;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ReportExport;
+
 
 class ReportController extends Controller
 {
@@ -47,7 +50,7 @@ class ReportController extends Controller
         $labDistribution = $this->getLabDistribution($filter, $request);
         $statusDistribution = $this->getStatusDistribution($filter, $request);
         $dayOfWeekData = $this->getDayOfWeekData($filter, $request);
-        
+
         // Data untuk cards
         $popularLab = $this->getPopularLab($filter, $request);
         $popularTime = $this->getPopularTime($filter, $request);
@@ -116,8 +119,8 @@ class ReportController extends Controller
             DB::raw('MONTH(peminjaman.tanggal) as month'),
             DB::raw('COUNT(*) as count')
         )
-        ->groupBy('month')
-        ->orderBy('month');
+            ->groupBy('month')
+            ->orderBy('month');
 
         $this->applyDateFilter($query, $filter);
 
@@ -160,7 +163,7 @@ class ReportController extends Controller
             'peminjaman.status',
             DB::raw('COUNT(*) as count')
         )
-        ->groupBy('peminjaman.status');
+            ->groupBy('peminjaman.status');
 
         $this->applyDateFilter($query, $filter);
 
@@ -194,8 +197,8 @@ class ReportController extends Controller
             DB::raw('DAYOFWEEK(peminjaman.tanggal) as day_of_week'),
             DB::raw('COUNT(*) as count')
         )
-        ->groupBy('day_of_week')
-        ->orderBy('day_of_week');
+            ->groupBy('day_of_week')
+            ->orderBy('day_of_week');
 
         $this->applyDateFilter($query, $filter);
 
@@ -249,9 +252,9 @@ class ReportController extends Controller
             DB::raw('CONCAT(jam_mulai, " - ", jam_selesai) as time_slot'),
             DB::raw('COUNT(*) as count')
         )
-        ->groupBy('time_slot')
-        ->orderBy('count', 'desc')
-        ->first();
+            ->groupBy('time_slot')
+            ->orderBy('count', 'desc')
+            ->first();
 
         return $query ? $query->time_slot : 'Tidak ada data';
     }
@@ -262,22 +265,22 @@ class ReportController extends Controller
         $now = Carbon::now();
         $startDate = $this->getStartDate($filter);
         $endDate = $now->format('Y-m-d');
-        
+
         $totalDays = $this->getWorkingDays($startDate, $endDate);
-        
+
         // Hitung total slot yang tersedia (asumsi 5 slot per hari, 5 hari kerja)
         $totalSlots = $totalDays * 5;
-        
+
         // Hitung slot yang terpakai
         $query = Peminjaman::whereBetween('peminjaman.tanggal', [$startDate, $endDate]);
-        
+
         // PERBAIKAN: Specify table untuk filter laboratorium
         if ($request->has('id_laboratorium') && $request->id_laboratorium != 'all') {
             $query->where('peminjaman.id_laboratorium', $request->id_laboratorium);
         }
-        
+
         $usedSlots = $query->count();
-        
+
         // Hitung persentase
         if ($totalSlots > 0) {
             $usageRate = round(($usedSlots / $totalSlots) * 100);
@@ -293,12 +296,18 @@ class ReportController extends Controller
         $now = Carbon::now();
 
         switch ($filter) {
-            case 'weekly': return $now->startOfWeek()->format('Y-m-d');
-            case 'monthly': return $now->startOfMonth()->format('Y-m-d');
-            case '3months': return $now->subMonths(3)->format('Y-m-d');
-            case '6months': return $now->subMonths(6)->format('Y-m-d');
-            case 'yearly': return $now->startOfYear()->format('Y-m-d');
-            default: return $now->startOfMonth()->format('Y-m-d');
+            case 'weekly':
+                return $now->startOfWeek()->format('Y-m-d');
+            case 'monthly':
+                return $now->startOfMonth()->format('Y-m-d');
+            case '3months':
+                return $now->subMonths(3)->format('Y-m-d');
+            case '6months':
+                return $now->subMonths(6)->format('Y-m-d');
+            case 'yearly':
+                return $now->startOfYear()->format('Y-m-d');
+            default:
+                return $now->startOfMonth()->format('Y-m-d');
         }
     }
 
@@ -317,4 +326,10 @@ class ReportController extends Controller
 
         return $workingDays;
     }
+
+    public function exportExcel()
+    {
+        return Excel::download(new ReportExport, 'laporan_peminjaman.xlsx');
+    }
+
 }
