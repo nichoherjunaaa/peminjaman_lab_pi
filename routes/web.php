@@ -8,7 +8,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-// AUTH (Guest Only)
+// GUEST
 Route::get('/', function () {
     return view('pages.login');
 })->name('login');
@@ -16,14 +16,17 @@ Route::get('/', function () {
 Route::post('/login', [UserController::class, 'login'])->name('login.post');
 
 
-// ROUTE YANG MEMBUTUHKAN LOGIN
+// Proteksi Route
 Route::middleware(['auth'])->group(function () {
 
     Route::post('/logout', [UserController::class, 'logout'])->name('logout');
-
     Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-    // Laboratorium
+    Route::get('/borrowing/{id}', [PeminjamanController::class, 'show'])->name('borrowing-details');
+    Route::get('/borrowing', [PeminjamanController::class, 'index'])->name('borrowing.index');
+    Route::get('/create', [PeminjamanController::class, 'create'])->name('booking.form');
+    Route::put('/borrowing/{id}', [PeminjamanController::class, 'update'])->name('borrowing.update');
+
     Route::get('/laboratorium', [LaboratoriumController::class, 'index'])->name('laboratorium.index');
     Route::get('/laboratorium/{id}', [LaboratoriumController::class, 'show'])->name('detail-laboratorium');
     Route::get('/laboratorium/{id}/booking', [LaboratoriumController::class, 'show_booking'])->name('booking-laboratorium');
@@ -31,12 +34,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/laboratorium/{id}/edit', [LaboratoriumController::class, 'edit'])->name('edit.laboratorium');
     Route::post('/laboratorium/create', [LaboratoriumController::class, 'store'])->name('laboratorium.store');
     Route::put('/laboratorium/{id}', [LaboratoriumController::class, 'update'])->name('laboratorium.update');
-    // add laboratorium (form)
-    Route::get('/laboratorium-add', function () {
-        return view('pages.laboratorium-add');
-    })->name('laboratorium.create');
+    // Route::get('/laboratorium-add', function () {
+    //     return view('pages.laboratorium-add');
+    // })->name('laboratorium.create');
 
-    // Borrowing
     Route::get('/borrowing/{id}', [PeminjamanController::class, 'show'])->name('borrowing-details');
     Route::get('/borrowing', [PeminjamanController::class, 'index'])->name('borrowing.index');
     Route::get('/create', [PeminjamanController::class, 'create'])->name('booking.form');

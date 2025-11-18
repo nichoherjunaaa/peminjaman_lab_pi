@@ -76,7 +76,7 @@
                         {{ session('error') }}
                     </div>
                 @endif
-                
+
                 <form id="peminjamanForm" action="{{ route('peminjaman.store') }}" method="POST"
                     enctype="multipart/form-data">
                     @csrf
@@ -96,19 +96,24 @@
                                     Pemrograman, dll.</p>
                             </div>
 
-                            <!-- Laboratorium -->
+                            {{-- laboratorium --}}
                             <div>
-                                <label for="laboratorium" class="block text-sm font-medium text-gray-700 mb-1">Laboratorium
-                                    *</label>
+                                <label for="laboratorium" class="block text-sm font-medium text-gray-700 mb-1">
+                                    Laboratorium *
+                                </label>
+
                                 <select id="laboratorium" name="id_laboratorium"
                                     class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                                     required>
-                                    <option value="">Pilih Laboratorium</option>
-                                    @foreach($laboratorium as $lab)
-                                        <option value="{{ $lab->id_laboratorium }}">
+
+                                    {{-- Option default --}}
+                                    @foreach ($laboratorium as $lab)
+                                        <option value="{{ $lab->id_laboratorium }}"
+                                            {{ $lab_id == $lab->id_laboratorium ? 'selected' : '' }}>
                                             {{ $lab->nama_laboratorium }} - {{ $lab->lokasi }}
                                         </option>
                                     @endforeach
+
                                 </select>
                             </div>
 
@@ -161,29 +166,34 @@
                         <h2 class="text-lg font-semibold text-gray-900 mb-4">Detail Waktu Peminjaman</h2>
 
                         <div class="space-y-4">
+
                             <!-- Tanggal Peminjaman -->
                             <div>
                                 <label for="tanggalPeminjaman" class="block text-sm font-medium text-gray-700 mb-1">Tanggal
                                     Peminjaman *</label>
-                                <input type="date" id="tanggalPeminjaman" name="tanggal"
-                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                                    required>
+                                    <input type="date" id="tanggalPeminjaman" name="tanggal"
+                                        value="{{ $tanggal }}"
+                                        class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                                        required>
+
                             </div>
+
 
                             <!-- Waktu Mulai -->
                             <div>
                                 <label for="waktuMulai" class="block text-sm font-medium text-gray-700 mb-1">Waktu Mulai
                                     *</label>
-                                <input type="time" id="waktuMulai" name="jam_mulai"
+                                <input type="time" id="waktuMulai" name="jam_mulai" value="{{ $jam_mulai }}"
                                     class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                                     required>
                             </div>
 
                             <!-- Waktu Selesai -->
                             <div>
-                                <label for="waktuSelesai" class="block text-sm font-medium text-gray-700 mb-1">Waktu Selesai
+                                <label for="waktuSelesai" class="block text-sm font-medium text-gray-700 mb-1">Waktu
+                                    Selesai
                                     *</label>
-                                <input type="time" id="waktuSelesai" name="jam_selesai"
+                                <input type="time" id="waktuSelesai" name="jam_selesai" value="{{ $jam_selesai }}"
                                     class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                                     required>
                             </div>
@@ -215,7 +225,8 @@
                             <div id="durasiPengulangan" class="hidden">
                                 <label for="jumlahPengulangan" class="block text-sm font-medium text-gray-700 mb-1">Jumlah
                                     Pengulangan</label>
-                                <input type="number" id="jumlahPengulangan" name="jumlahPengulangan" min="1" max="12"
+                                <input type="number" id="jumlahPengulangan" name="jumlahPengulangan" min="1"
+                                    max="12"
                                     class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                                     placeholder="Masukkan jumlah pengulangan">
                                 <p class="mt-1 text-xs text-gray-500">Maksimal 12 kali pengulangan</p>
@@ -243,7 +254,8 @@
                         <div class="space-y-6">
                             <!-- Upload Foto KTM -->
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Foto Kartu Tanda Mahasiswa (KTM)
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Foto Kartu Tanda Mahasiswa
+                                    (KTM)
                                     *</label>
 
                                 <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-primary transition-colors duration-200"
@@ -280,8 +292,8 @@
                                     </div>
                                 </div>
 
-                                <input type="file" id="fotoKTM" name="foto_ktm" class="hidden" accept="image/jpeg,image/png"
-                                    required>
+                                <input type="file" id="fotoKTM" name="foto_ktm" class="hidden"
+                                    accept="image/jpeg,image/png" required>
                                 <p class="mt-2 text-xs text-gray-500">Pastikan foto KTM terlihat jelas dan terbaca dengan
                                     baik</p>
                             </div>
