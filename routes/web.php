@@ -28,15 +28,15 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/borrowing/{id}', [PeminjamanController::class, 'update'])->name('borrowing.update');
 
     Route::get('/laboratorium', [LaboratoriumController::class, 'index'])->name('laboratorium.index');
+    Route::get('/laboratorium-add', function () {
+        return view('pages.laboratorium-add');
+    })->name('laboratorium.create');
+    Route::post('/laboratorium/create', [LaboratoriumController::class, 'store'])->name('laboratorium.store');
     Route::get('/laboratorium/{id}', [LaboratoriumController::class, 'show'])->name('detail-laboratorium');
     Route::get('/laboratorium/{id}/booking', [LaboratoriumController::class, 'show_booking'])->name('booking-laboratorium');
     Route::delete('/laboratorium/{id}', [LaboratoriumController::class, 'destroy'])->name('laboratorium.destroy');
     Route::get('/laboratorium/{id}/edit', [LaboratoriumController::class, 'edit'])->name('edit.laboratorium');
-    Route::post('/laboratorium/create', [LaboratoriumController::class, 'store'])->name('laboratorium.store');
     Route::put('/laboratorium/{id}', [LaboratoriumController::class, 'update'])->name('laboratorium.update');
-    // Route::get('/laboratorium-add', function () {
-    //     return view('pages.laboratorium-add');
-    // })->name('laboratorium.create');
 
     Route::get('/borrowing/{id}', [PeminjamanController::class, 'show'])->name('borrowing-details');
     Route::get('/borrowing', [PeminjamanController::class, 'index'])->name('borrowing.index');

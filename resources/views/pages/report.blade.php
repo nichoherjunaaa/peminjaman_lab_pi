@@ -73,7 +73,7 @@
             </div>
 
             <!-- Stats Cards -->
-            <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-8">
+            <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 mb-8">
                 <!-- Total Peminjaman -->
                 <div class="bg-white overflow-hidden shadow rounded-lg card-hover">
                     <div class="p-5">
@@ -94,7 +94,7 @@
                 </div>
 
                 <!-- Rata-rata Penggunaan -->
-                <div class="bg-white overflow-hidden shadow rounded-lg card-hover">
+                {{-- <div class="bg-white overflow-hidden shadow rounded-lg card-hover">
                     <div class="p-5">
                         <div class="flex items-center">
                             <div class="flex-shrink-0">
@@ -110,7 +110,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
                 <!-- Lab Paling Populer -->
                 <div class="bg-white overflow-hidden shadow rounded-lg card-hover">

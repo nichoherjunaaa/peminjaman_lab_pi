@@ -24,6 +24,7 @@ class ReportController extends Controller
 
         // Filter periode
         $filter = $request->get('filter', 'monthly');
+        // dd($filter);
         $this->applyDateFilter($query, $filter);
 
         // Filter laboratorium - PERBAIKAN: specify table

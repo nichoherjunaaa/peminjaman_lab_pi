@@ -26,74 +26,76 @@
                             <p class="mt-1 text-sm text-gray-500">Lengkapi data laboratorium dengan benar</p>
                         </div>
 
-                        <form class="p-6 space-y-6" action="laboratorium.store" method="POST" />
-                        @csrf
-                        <!-- Nama Laboratorium -->
-                        <div>
-                            <label for="nama_laboratorium" class="block text-sm font-medium text-gray-700 mb-1">Nama
-                                Laboratorium</label>
-                            <input type="text" id="nama_laboratorium" name="nama_laboratorium"
-                                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                                required>
-                        </div>
-
-
-                        <div>
-                            <label for="lokasi" class="block text-sm font-medium text-gray-700 mb-1">Lantai</label>
-                            <select id="floor" name="floor"
-                                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <option value="Lantai 1">Lantai 1</option>
-                                <option value="Lantai 2">Lantai 2</option>
-                                <option value="Lantai 3">Lantai 3</option>
-                                <option value="Lantai 4">Lantai 4</option>
-                            </select>
-                        </div>
-
-                        <!-- Kapasitas -->
-                        <div>
-                            <label for="capacity" class="block text-sm font-medium text-gray-700 mb-1">Kapasitas
-                                (orang)</label>
-                            <input type="number" id="capacity" name="capacity" min="1" max="100"
-                                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                                value="0" required>
-                        </div>
-
-                        <!-- Status -->
-                        <div>
-                            <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                            <select id="status" name="status"
-                                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <option value="available" selected>Tersedia</option>
-                                <option value="maintenance">Dalam Perawatan</option>
-                                <option value="unavailable">Tidak Tersedia</option>
-                            </select>
-                        </div>
-
-                        <!-- Luas -->
-                        <div>
-                            <label for="luas" class="block text-sm font-medium text-gray-700 mb-1">Luas (m²)</label>
-                            <input type="number" id="luas" name="luas" min="0"
-                                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" value="0">
+                        <form class="p-6 space-y-6" action="{{ route('laboratorium.store') }}" method="POST">
+                            @csrf
+                            <!-- Nama Laboratorium -->
+                            <div>
+                                <label for="nama_laboratorium" class="block text-sm font-medium text-gray-700 mb-1">Nama
+                                    Laboratorium</label>
+                                <input type="text" id="nama_laboratorium" name="nama_laboratorium"
+                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                                    required>
                             </div>
 
-                        <!-- Deskripsi -->
-                        <div>
-                            <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
-                            <textarea id="description" name="description" rows="4"
-                                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"></textarea>
-                        </div>
 
-                        <!-- Tombol Aksi -->
-                        <div class="flex justify-end space-x-3 pt-6">
-                            <a href="{{ route('laboratorium.index') }}"
-                                class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors duration-200">
-                                Batal
-                            </a>
-                            <button type="submit"
-                                class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors duration-200">
-                                Simpan
-                            </button>
-                        </div>
+                            <div>
+                                <label for="lokasi" class="block text-sm font-medium text-gray-700 mb-1">Lantai</label>
+                                <select id="floor" name="lokasi"
+                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                    <option value="Lantai 1">Lantai 1</option>
+                                    <option value="Lantai 2">Lantai 2</option>
+                                    <option value="Lantai 3">Lantai 3</option>
+                                    <option value="Lantai 4">Lantai 4</option>
+                                </select>
+                            </div>
+
+                            <!-- Kapasitas -->
+                            <div>
+                                <label for="kapasitas" class="block text-sm font-medium text-gray-700 mb-1">Kapasitas
+                                    (orang)</label>
+                                <input type="number" id="capacity" name="kapasitas" min="1" max="100"
+                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                                    value="0" required>
+                            </div>
+
+                            <!-- Status -->
+                            <div>
+                                <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                                <select id="status" name="status"
+                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                    <option value="tersedia" selected>Tersedia</option>
+                                    <option value="dalam perawatan?">Dalam Perawatan</option>
+                                    <option value="tidak tersedia">Tidak Tersedia</option>
+                                </select>
+                            </div>
+
+                            <!-- Luas -->
+                            <div>
+                                <label for="luas" class="block text-sm font-medium text-gray-700 mb-1">Luas (m²)</label>
+                                <input type="number" id="luas" name="luas" min="0"
+                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                                    value="0">
+                            </div>
+
+                            <!-- Deskripsi -->
+                            <div>
+                                <label for="description"
+                                    class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
+                                <textarea id="description" name="deskripsi" rows="4"
+                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"></textarea>
+                            </div>
+
+                            <!-- Tombol Aksi -->
+                            <div class="flex justify-end space-x-3 pt-6">
+                                <a href="{{ route('laboratorium.index') }}"
+                                    class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors duration-200">
+                                    Batal
+                                </a>
+                                <button type="submit"
+                                    class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors duration-200">
+                                    Simpan
+                                </button>
+                            </div>
                         </form>
                     </div>
                 </div>

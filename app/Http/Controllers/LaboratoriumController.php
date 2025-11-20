@@ -81,7 +81,6 @@ class LaboratoriumController extends Controller
 
     public function store(Request $request)
     {
-        dd(request()->all());
         $data = new Laboratorium();
         $data->fill($request->all());
         $data->save();

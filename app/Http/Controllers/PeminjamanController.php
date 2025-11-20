@@ -75,7 +75,7 @@ class PeminjamanController extends Controller
                 $query->where('id_laboratorium', $filterLab);
             })
             ->orderBy('created_at', 'desc')
-            ->paginate(10);
+            ->paginate(8);
 
         return view('pages.borrowing', compact(
             'list_peminjaman',

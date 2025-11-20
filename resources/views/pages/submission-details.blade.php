@@ -101,21 +101,18 @@
                             </div>
                         </div>
 
-                        @if ($peminjaman->status === 'rejected')
-                                <div id="alasanPenolakanContainer" class="mt-6">
-                                    <label for="alasanPenolakan" class="block text-sm font-medium text-gray-700 mb-2">
-                                        Alasan Penolakan
-                                    </label>
+                        @if ($peminjaman->status === 'rejected' || Auth::user()->role === 'admin')
+                                    <div id="alasanPenolakanContainer"
+                                        class="mt-6 {{ $peminjaman->status !== 'rejected' ? 'hidden' : '' }}">
+                                        <label for="alasanPenolakan" class="block text-sm font-medium text-gray-700 mb-2">
+                                            Alasan Penolakan
+                                        </label>
 
-                                    <textarea name="alasan_penolakan" id="alasanPenolakan" rows="3"
-                                    {{ Auth::user()->role !== 'admin' ? 'disabled' : '' }}
-                                        placeholder="Jelaskan alasan penolakan pengajuan ini..."
-                                        class="w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-700 
-                                        focus:outline-none focus:ring-2 focus:ring-red-500 resize-none">{{ old('alasan_penolakan', $peminjaman->alasan_penolakan) }}</textarea>
-                                </div>
+                                        <textarea name="alasan_penolakan" id="alasanPenolakan" rows="3" {{ Auth::user()->role !== 'admin' ? 'disabled' : '' }} placeholder="Jelaskan alasan penolakan pengajuan ini..."
+                                            class="w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-700 
+                            focus:outline-none focus:ring-2 focus:ring-primary resize-none">{{ old('alasan_penolakan', $peminjaman->alasan_penolakan) }}</textarea>
+                                    </div>
                         @endif
-
-
                         <div class="flex justify-end mt-8 space-x-4">
                             <a href="{{ route('borrowing.index') }}"
                                 class="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium">
@@ -133,16 +130,19 @@
             </div>
         </div>
     </div>
-
     <script>
-        // Tampilkan textarea alasan penolakan jika status = rejected
-        document.getElementById('status').addEventListener('change', function () {
-            const alasanContainer = document.getElementById('alasanPenolakanContainer');
-            if (this.value === 'rejected') {
-                alasanContainer.classList.remove('hidden');
-            } else {
-                alasanContainer.classList.add('hidden');
-            }
-        });
-    </script>
+    document.getElementById('status').addEventListener('change', function () {
+        const alasanContainer = document.getElementById('alasanPenolakanContainer');
+        const alasanText = document.getElementById('alasanPenolakan');
+
+        if (this.value === 'rejected') {
+            alasanContainer.classList.remove('hidden');
+            alasanText.removeAttribute("disabled");
+        } else {
+            alasanContainer.classList.add('hidden');
+            alasanText.setAttribute("disabled", true);
+        }
+    });
+</script>
+
 @endsection

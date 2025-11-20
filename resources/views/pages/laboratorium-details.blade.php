@@ -43,7 +43,7 @@
                                     <p class="mt-2 text-gray-600">{{ $lab->lokasi }}</p>
                                     <div class="mt-3 flex items-center space-x-3">
                                         <span
-                                            class="capitalize px-3 py-1 text-sm font-semibold rounded-full status-available">
+                                            class="capitalize px-3 py-1 text-sm font-semibold rounded-full status-{{ $lab->status === "tersedia" ? "available" : "rejected" }}">
                                             <i class="fas fa-check-circle mr-1"></i>
                                             {{ $lab->status }}
                                         </span>
