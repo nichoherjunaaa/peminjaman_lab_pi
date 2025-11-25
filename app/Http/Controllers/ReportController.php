@@ -15,24 +15,18 @@ class ReportController extends Controller
 {
     public function index(Request $request)
     {
-        // Data laboratorium untuk filter
         $laboratoriums = Laboratorium::all();
 
-        // Apply filters
         $query = Peminjaman::with('laboratorium', 'user')
             ->select('peminjaman.*');
 
-        // Filter periode
         $filter = $request->get('filter', 'monthly');
-        // dd($filter);
         $this->applyDateFilter($query, $filter);
 
-        // Filter laboratorium - PERBAIKAN: specify table
         if ($request->has('id_laboratorium') && $request->id_laboratorium != 'all') {
             $query->where('peminjaman.id_laboratorium', $request->id_laboratorium);
         }
 
-        // Filter status
         if ($request->has('status') && $request->status != 'all') {
             $statusMap = [
                 'approved' => 'approved',
@@ -43,21 +37,17 @@ class ReportController extends Controller
             $query->where('peminjaman.status', $statusMap[$request->status]);
         }
 
-        // Get data untuk statistik
         $peminjaman_count = $query->count();
 
-        // Data untuk charts
         $monthlyData = $this->getMonthlyData($filter);
         $labDistribution = $this->getLabDistribution($filter, $request);
         $statusDistribution = $this->getStatusDistribution($filter, $request);
         $dayOfWeekData = $this->getDayOfWeekData($filter, $request);
 
-        // Data untuk cards
         $popularLab = $this->getPopularLab($filter, $request);
         $popularTime = $this->getPopularTime($filter, $request);
         $usageRate = $this->getUsageRate($filter, $request);
 
-        // Data untuk tabel
         $peminjamanData = $query->orderBy('peminjaman.tanggal', 'desc')
             ->orderBy('peminjaman.jam_mulai', 'desc')
             ->paginate(10);
@@ -127,7 +117,6 @@ class ReportController extends Controller
 
         $data = $query->get();
 
-        // Format data untuk chart
         $months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
         $monthlyData = array_fill(0, 12, 0);
 
@@ -150,7 +139,6 @@ class ReportController extends Controller
 
         $this->applyDateFilter($query, $filter);
 
-        // PERBAIKAN: Specify table untuk filter laboratorium
         if ($request->has('id_laboratorium') && $request->id_laboratorium != 'all') {
             $query->where('peminjaman.id_laboratorium', $request->id_laboratorium);
         }
@@ -168,14 +156,12 @@ class ReportController extends Controller
 
         $this->applyDateFilter($query, $filter);
 
-        // PERBAIKAN: Specify table untuk filter laboratorium
         if ($request->has('id_laboratorium') && $request->id_laboratorium != 'all') {
             $query->where('peminjaman.id_laboratorium', $request->id_laboratorium);
         }
 
         $data = $query->get();
 
-        // Map status untuk chart
         $statusMap = [
             'approved' => 'Disetujui',
             'pending' => 'Pending',
@@ -203,32 +189,29 @@ class ReportController extends Controller
 
         $this->applyDateFilter($query, $filter);
 
-        // PERBAIKAN: Specify table untuk filter laboratorium
         if ($request->has('id_laboratorium') && $request->id_laboratorium != 'all') {
             $query->where('peminjaman.id_laboratorium', $request->id_laboratorium);
         }
 
         $data = $query->get();
 
-        // Map day of week (MySQL: 1=Sunday, 7=Saturday)
         $daysMap = [2 => 'Senin', 3 => 'Selasa', 4 => 'Rabu', 5 => 'Kamis', 6 => 'Jumat', 7 => 'Sabtu', 1 => 'Minggu'];
         $dayData = array_fill(0, 7, 0);
 
         foreach ($data as $item) {
-            $dayIndex = $item->day_of_week - 1; // Adjust for array index
+            $dayIndex = $item->day_of_week - 1;
             $dayData[$dayIndex] = $item->count;
         }
 
-        // Reorder untuk Senin-Sabtu (skip Minggu)
         return [
             'labels' => ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'],
             'data' => [
-                $dayData[1], // Senin
-                $dayData[2], // Selasa
-                $dayData[3], // Rabu
-                $dayData[4], // Kamis
-                $dayData[5], // Jumat
-                $dayData[6]  // Sabtu
+                $dayData[1], 
+                $dayData[2], 
+                $dayData[3], 
+                $dayData[4], 
+                $dayData[5], 
+                $dayData[6]  
             ]
         ];
     }
@@ -262,27 +245,23 @@ class ReportController extends Controller
 
     private function getUsageRate($filter, $request)
     {
-        // Hitung total hari kerja dalam periode
+
         $now = Carbon::now();
         $startDate = $this->getStartDate($filter);
         $endDate = $now->format('Y-m-d');
 
         $totalDays = $this->getWorkingDays($startDate, $endDate);
 
-        // Hitung total slot yang tersedia (asumsi 5 slot per hari, 5 hari kerja)
         $totalSlots = $totalDays * 5;
 
-        // Hitung slot yang terpakai
         $query = Peminjaman::whereBetween('peminjaman.tanggal', [$startDate, $endDate]);
 
-        // PERBAIKAN: Specify table untuk filter laboratorium
         if ($request->has('id_laboratorium') && $request->id_laboratorium != 'all') {
             $query->where('peminjaman.id_laboratorium', $request->id_laboratorium);
         }
 
         $usedSlots = $query->count();
 
-        // Hitung persentase
         if ($totalSlots > 0) {
             $usageRate = round(($usedSlots / $totalSlots) * 100);
         } else {
@@ -319,7 +298,7 @@ class ReportController extends Controller
         $workingDays = 0;
 
         for ($date = $start; $date->lte($end); $date->addDay()) {
-            // Skip weekend (Saturday = 6, Sunday = 7)
+
             if ($date->dayOfWeek !== Carbon::SATURDAY && $date->dayOfWeek !== Carbon::SUNDAY) {
                 $workingDays++;
             }

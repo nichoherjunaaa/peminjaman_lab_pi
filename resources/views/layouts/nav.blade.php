@@ -42,13 +42,6 @@
             </div>
             <!-- User Menu -->
             <div class="flex items-center space-x-4">
-                <!-- Notifications -->
-                <button
-                    class="relative p-2 text-white/90 hover:text-white rounded-lg hover:bg-white/10 transition-colors duration-200">
-                    <i class="fas fa-bell"></i>
-                    <span class="absolute top-1 right-1 w-2 h-2 bg-secondary rounded-full"></span>
-                </button>
-
                 @php
                     $user = Auth::user();
                     $nama = 'Tidak diketahui';

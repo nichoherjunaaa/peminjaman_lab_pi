@@ -22,7 +22,6 @@ class QuickBookController extends Controller
             $labName = $request->input('lab_name');
             $timeSlot = $request->input('time_slot');
 
-            // Cek jika tanggal kosong
             if (empty($tanggal)) {
                 return response()->json([
                     'success' => false,
@@ -31,7 +30,6 @@ class QuickBookController extends Controller
                 ], 422);
             }
 
-            // Validasi tanggal tidak boleh kurang dari hari ini
             $today = Carbon::today();
             $selectedDate = Carbon::parse($tanggal);
 
@@ -43,7 +41,6 @@ class QuickBookController extends Controller
                 ], 422);
             }
 
-            // Lanjutkan query laboratorium seperti sebelumnya...
             $query = Laboratorium::query();
 
             if (!empty($labName) && $labName !== "") {
@@ -53,7 +50,6 @@ class QuickBookController extends Controller
             $labs = $query->get();
 
 
-            // Jika tidak ada tanggal yang dipilih
             if (empty($tanggal)) {
                 $result = $labs->map(function ($lab) {
                     return [
@@ -76,7 +72,6 @@ class QuickBookController extends Controller
                 ]);
             }
 
-            // Define time slots
             $timeSlots = [
                 ['08:00', '10:00'],
                 ['10:00', '12:00'],
@@ -92,13 +87,10 @@ class QuickBookController extends Controller
                     [$startTime, $endTime] = $slot;
                     $waktuSlot = $startTime . ' - ' . $endTime;
 
-                    // Check if lab is booked for this time slot - PERBAIKAN QUERY
                     $isBooked = Peminjaman::where('id_laboratorium', $lab->id_laboratorium)
                         ->whereDate('tanggal', $tanggal)
                         ->where(function ($query) use ($startTime, $endTime) {
                             $query->where(function ($q) use ($startTime, $endTime) {
-                                // Cek tabrakan waktu: 
-                                // Jika peminjaman mulai sebelum slot berakhir DAN selesai setelah slot mulai
                                 $q->where('jam_mulai', '<', $endTime)
                                     ->where('jam_selesai', '>', $startTime);
                             });
@@ -108,7 +100,6 @@ class QuickBookController extends Controller
 
                     $isAvailable = !$isBooked;
 
-                    // DEBUG: Log untuk setiap slot
                     \Log::info('Slot Availability Check:', [
                         'lab' => $lab->nama_laboratorium,
                         'tanggal' => $tanggal,
@@ -117,7 +108,6 @@ class QuickBookController extends Controller
                         'isAvailable' => $isAvailable
                     ]);
 
-                    // Hanya tambahkan ke hasil jika tersedia
                     if ($isAvailable) {
                         $result[] = [
                             'id_laboratorium' => $lab->id_laboratorium,

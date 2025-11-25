@@ -54,29 +54,18 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="mt-4 md:mt-0 flex space-x-3">
-                                <a href="{{ route("booking.form") }}"
-                                    class="px-6 py-3 bg-primary text-white rounded-lg font-medium hover:bg-opacity-90 transition-colors">
-                                    <i class="fas fa-calendar-plus mr-2"></i>
-                                    Pinjam Sekarang
-                                </a>
-                            </div>
                         </div>
                     </div>
 
                     <!-- Quick Stats -->
-                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+                    <div class="grid grid-cols-2 md:grid-cols-2 gap-4 mb-6">
                         <div class="bg-white rounded-lg shadow p-4 text-center">
                             <div class="text-3xl font-bold text-primary">{{ $lab->kapasitas }}</div>
                             <div class="text-sm text-gray-600 mt-1">Kapasitas</div>
                         </div>
                         <div class="bg-white rounded-lg shadow p-4 text-center">
-                            <div class="text-3xl font-bold text-primary">15</div>
+                            <div class="text-3xl font-bold text-primary">{{ $peminjaman_bulan}}</div>
                             <div class="text-sm text-gray-600 mt-1">Peminjaman Bulan Ini</div>
-                        </div>
-                        <div class="bg-white rounded-lg shadow p-4 text-center">
-                            <div class="text-3xl font-bold text-primary">98%</div>
-                            <div class="text-sm text-gray-600 mt-1">Tingkat Ketersediaan</div>
                         </div>
                     </div>
 
@@ -112,18 +101,8 @@
                         <div id="overview" class="tab-content active p-6">
                             <h2 class="text-xl font-bold text-gray-900 mb-4">Tentang Laboratorium</h2>
                             <p class="text-gray-700 leading-relaxed mb-6">
-                                Laboratorium Komputer Dasar A adalah fasilitas modern yang dirancang khusus untuk mendukung
-                                kegiatan pembelajaran pemrograman, desain grafis, dan multimedia. Dilengkapi dengan 30 unit
-                                komputer dengan spesifikasi tinggi dan berbagai software development tools terkini,
-                                laboratorium ini menyediakan lingkungan yang ideal untuk praktikum mahasiswa.
+                                {{ $lab->deskripsi }}
                             </p>
-                            <p class="text-gray-700 leading-relaxed mb-6">
-                                Setiap workstation dilengkapi dengan monitor layar lebar, keyboard ergonomis, dan mouse
-                                gaming untuk kenyamanan maksimal. Ruangan ber-AC dengan pencahayaan yang optimal membuat
-                                suasana belajar menjadi lebih kondusif. Koneksi internet berkecepatan tinggi tersedia di
-                                seluruh area laboratorium.
-                            </p>
-
                             <div class="grid md:grid-cols-2 gap-6 mt-8">
                                 <div>
                                     <h3 class="text-lg font-semibold text-gray-900 mb-3">Informasi Umum</h3>
@@ -202,68 +181,48 @@
                         <!-- Tab Content: Facilities -->
                         <div id="facilities" class="tab-content p-6">
                             <h2 class="text-xl font-bold text-gray-900 mb-4">Fasilitas Lengkap</h2>
+
                             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-                                <div class="border border-gray-200 rounded-lg p-4">
-                                    <div class="flex items-center">
-                                        <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
-                                            <i class="fas fa-desktop text-blue-600"></i>
-                                        </div>
-                                        <h3 class="font-semibold text-gray-900">Komputer</h3>
-                                    </div>
-                                </div>
 
-                                <div class="border border-gray-200 rounded-lg p-4">
-                                    <div class="flex items-center">
-                                        <div
-                                            class="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center mr-3">
-                                            <i class="fas fa-chalkboard text-green-600"></i>
-                                        </div>
-                                        <h3 class="font-semibold text-gray-900">Proyektor</h3>
-                                    </div>
-                                </div>
+                                @foreach($fasilitas as $fas)
+                                    @php
+                                        $name = $fas->barang->nama_barang;
 
-                                <div class="border border-gray-200 rounded-lg p-4">
-                                    <div class="flex items-center">
-                                        <div
-                                            class="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center mr-3">
-                                            <i class="fas fa-wind text-purple-600"></i>
-                                        </div>
-                                        <h3 class="font-semibold text-gray-900">AC</h3>
-                                    </div>
-                                </div>
+                                        $icons = [
+                                            'pc' => ['icon' => 'fa-desktop', 'bg' => 'bg-blue-100', 'txt' => 'text-blue-600'],
+                                            'proyektor' => ['icon' => 'fa-chalkboard', 'bg' => 'bg-green-100', 'txt' => 'text-green-600'],
+                                            'ac' => ['icon' => 'fa-wind', 'bg' => 'bg-purple-100', 'txt' => 'text-purple-600'],
+                                            'internet' => ['icon' => 'fa-wifi', 'bg' => 'bg-yellow-100', 'txt' => 'text-yellow-600'],
+                                            'printer' => ['icon' => 'fa-print', 'bg' => 'bg-red-100', 'txt' => 'text-red-600'],
+                                            'audio system' => ['icon' => 'fa-volume-up', 'bg' => 'bg-indigo-100', 'txt' => 'text-indigo-600'],
+                                        ];
 
-                                <div class="border border-gray-200 rounded-lg p-4">
-                                    <div class="flex items-center">
-                                        <div
-                                            class="w-10 h-10 rounded-lg bg-yellow-100 flex items-center justify-center mr-3">
-                                            <i class="fas fa-wifi text-yellow-600"></i>
-                                        </div>
-                                        <h3 class="font-semibold text-gray-900">Internet</h3>
-                                    </div>
-                                </div>
+                                        $key = strtolower($name);
 
-                                <div class="border border-gray-200 rounded-lg p-4">
-                                    <div class="flex items-center">
-                                        <div class="w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center mr-3">
-                                            <i class="fas fa-print text-red-600"></i>
-                                        </div>
-                                        <h3 class="font-semibold text-gray-900">Printer</h3>
-                                    </div>
-                                </div>
+                                        $icon = $icons[$key]['icon'] ?? 'fa-cube';
+                                        $bg = $icons[$key]['bg'] ?? 'bg-gray-100';
+                                        $txt = $icons[$key]['txt'] ?? 'text-gray-600';
+                                    @endphp
 
-                                <div class="border border-gray-200 rounded-lg p-4">
-                                    <div class="flex items-center">
-                                        <div
-                                            class="w-10 h-10 rounded-lg bg-indigo-100 flex items-center justify-center mr-3">
-                                            <i class="fas fa-volume-up text-indigo-600"></i>
+                                    <div class="border border-gray-200 rounded-lg p-4">
+                                        <div class="flex items-center">
+                                            <div class="w-10 h-10 rounded-lg {{ $bg }} flex items-center justify-center mr-3">
+                                                <i class="fas {{ $icon }} {{ $txt }}"></i>
+                                            </div>
+
+                                            <div>
+                                                <h3 class="font-semibold text-gray-900">{{ $name }}</h3>
+                                                <p class="text-sm text-gray-600">Jumlah: {{ $fas->jumlah }}</p>
+                                            </div>
                                         </div>
-                                        <h3 class="font-semibold text-gray-900">Audio System</h3>
                                     </div>
-                                </div>
+
+                                @endforeach
+
                             </div>
                         </div>
 
-                        <!-- Tab Content: Schedule -->
+
                         <div id="schedule" class="tab-content p-6">
                             <h2 class="text-xl font-bold text-gray-900 mb-4">Jadwal Ketersediaan</h2>
 
@@ -708,34 +667,34 @@
                         bookingElement.className = 'booking-card bg-gray-50 p-4 rounded-lg border-l-4 border-secondary';
 
                         bookingElement.innerHTML = `
-                            <div class="flex justify-between items-start mb-2">
-                                <div class="flex items-center">
-                                    <i class="${jenisIcon[booking.jenis]} text-gray-500 mr-2"></i>
-                                    <h3 class="font-medium text-sm text-gray-900 text-start">${booking.lab}</h3>
+                                <div class="flex justify-between items-start mb-2">
+                                    <div class="flex items-center">
+                                        <i class="${jenisIcon[booking.jenis]} text-gray-500 mr-2"></i>
+                                        <h3 class="font-medium text-sm text-gray-900 text-start">${booking.lab}</h3>
+                                    </div>
+                                    <span class="status-badge font-medium rounded-full ${statusColors[booking.status]}">
+                                        ${statusText[booking.status]}
+                                    </span>
                                 </div>
-                                <span class="status-badge font-medium rounded-full ${statusColors[booking.status]}">
-                                    ${statusText[booking.status]}
-                                </span>
-                            </div>
-                            <p class="text-sm text-start text-gray-600 mb-2">${booking.kegiatan}</p>
-                            <div class="flex justify-between items-center text-sm">
-                                <span class="text-gray-500 flex items-center">
-                                    <i class="fas fa-clock mr-1"></i>
-                                    ${booking.waktu}
-                                </span>
-                                <span class="text-gray-500">${booking.peminjam}</span>
-                            </div>
-                        `;
+                                <p class="text-sm text-start text-gray-600 mb-2">${booking.kegiatan}</p>
+                                <div class="flex justify-between items-center text-sm">
+                                    <span class="text-gray-500 flex items-center">
+                                        <i class="fas fa-clock mr-1"></i>
+                                        ${booking.waktu}
+                                    </span>
+                                    <span class="text-gray-500">${booking.peminjam}</span>
+                                </div>
+                            `;
                         bookingList.appendChild(bookingElement);
                     });
                 } else {
                     bookingList.innerHTML = `
-                        <div class="text-center py-8 text-gray-500">
-                            <i class="fas fa-calendar-times text-3xl mb-2"></i>
-                            <p>Tidak ada peminjaman</p>
-                            <p class="text-sm mt-1">pada tanggal ini</p>
-                        </div>
-                    `;
+                            <div class="text-center py-8 text-gray-500">
+                                <i class="fas fa-calendar-times text-3xl mb-2"></i>
+                                <p>Tidak ada peminjaman</p>
+                                <p class="text-sm mt-1">pada tanggal ini</p>
+                            </div>
+                        `;
                 }
             }
 

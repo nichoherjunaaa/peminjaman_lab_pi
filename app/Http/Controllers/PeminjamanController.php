@@ -11,22 +11,8 @@ use Illuminate\Support\Facades\Validator;
 
 class PeminjamanController extends Controller
 {
-    public function create(Request $request)
-    {
-        $lab_id = $request->query('lab_id') ?? 0;
-        $tanggal = $request->query('tanggal') ?? date('Y-m-d');
-        $jam_mulai = $request->query('jam_mulai') ?? '00:00';
-        $jam_selesai = $request->query('jam_selesai') ?? '00:00';
-
-        $laboratorium = Laboratorium::all();
-
-        return view('pages.submission', compact('laboratorium', 'lab_id', 'tanggal', 'jam_mulai', 'jam_selesai'));
-
-    }
-
     public function index(Request $request)
     {
-        // Ambil data unik untuk dropdown filter
         $tanggal_peminjaman = Peminjaman::select('tanggal')
             ->distinct()
             ->get();
@@ -35,12 +21,10 @@ class PeminjamanController extends Controller
             ->distinct()
             ->get();
 
-        // Ambil user login
         $user = auth()->user();
         $admin = $user->role === 'admin';
         $peminjamKey = $user->username;
 
-        // Dapatkan nama peminjam berdasarkan role
         if ($user->isMahasiswa()) {
             $peminjam = Mahasiswa::where('nim', $peminjamKey)->first();
             $namaPeminjam = $peminjam->nama ?? 'Tidak Diketahui';
@@ -59,11 +43,9 @@ class PeminjamanController extends Controller
             return back()->with('error', 'Data peminjam tidak ditemukan.');
         }
 
-        // Ambil input filter dari request
         $filterTanggal = $request->input('tanggal');
         $filterLab = $request->input('laboratorium');
 
-        // Query utama
         $list_peminjaman = Peminjaman::with(['peminjam', 'laboratorium'])
             ->when(!$admin, function ($query) use ($peminjamKey) {
                 $query->where('id_peminjam', $peminjamKey);
@@ -85,8 +67,20 @@ class PeminjamanController extends Controller
         ));
     }
 
+    public function create(Request $request)
+    {
+        $lab_id = $request->query('lab_id') ?? 0;
+        $tanggal = $request->query('tanggal') ?? date('Y-m-d');
+        $jam_mulai = $request->query('jam_mulai') ?? '00:00';
+        $jam_selesai = $request->query('jam_selesai') ?? '00:00';
+        $laboratorium = Laboratorium::all();
+        return view('pages.submission', compact('laboratorium', 'lab_id', 'tanggal', 'jam_mulai', 'jam_selesai'));
+
+    }
+
     public function store(Request $request)
     {
+        dd($request->all());
         $validator = Validator::make($request->all(), [
             'id_laboratorium' => 'required',
             'nama_kegiatan' => 'required|string|max:150',
@@ -102,10 +96,9 @@ class PeminjamanController extends Controller
 
         $user = Auth::user();
 
-        // Cek tabrakan peminjaman yang sudah disetujui
         $existingBooking = Peminjaman::where('id_laboratorium', $request->id_laboratorium)
             ->whereDate('tanggal', $request->tanggal)
-            ->where('status', 'approved') // hanya cek yang sudah disetujui
+            ->where('status', 'approved')
             ->where(function ($q) use ($request) {
                 $q->whereBetween('jam_mulai', [$request->jam_mulai, $request->jam_selesai])
                     ->orWhereBetween('jam_selesai', [$request->jam_mulai, $request->jam_selesai])
@@ -158,13 +151,12 @@ class PeminjamanController extends Controller
     public function report(Request $request)
     {
         // dd($request->all());
-        $filter = $request->input('filter', 'all'); // periode waktu
-        $status = $request->input('status', 'all'); // status peminjaman
-        $lab_id = $request->input('id_laboratorium', 'all'); // laboratorium
+        $filter = $request->input('filter', 'all');
+        $status = $request->input('status', 'all');
+        $lab_id = $request->input('id_laboratorium', 'all');
 
         $query = Peminjaman::query();
 
-        // --- Filter waktu ---
         switch ($filter) {
             case 'weekly':
                 $query->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
@@ -184,12 +176,10 @@ class PeminjamanController extends Controller
                 break;
         }
 
-        // --- Filter status ---
         if ($status !== 'all') {
             $query->where('status', $status);
         }
 
-        // --- Filter laboratorium ---
         if ($lab_id !== 'all') {
             $query->where('laboratorium_id', $lab_id);
         }

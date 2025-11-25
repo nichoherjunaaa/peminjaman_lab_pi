@@ -11,24 +11,9 @@
                 <p class="mt-2 text-gray-600">Selamat datang di Sistem Peminjaman Laboratorium</p>
             </div>
 
-            {{-- map laboratorium --}}
+            {{-- Map laboratorium --}}
             <div class="flex justify-center items-center w-full">
-                <img src="{{ asset('images/USD500.png') }}" alt="">
-            </div>
 
-            <!-- Quick Actions -->
-            <div class="mb-8">
-                <h2 class="text-lg font-medium text-gray-900 mb-4">Aksi Cepat</h2>
-                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                    <x-quick-action href="{{ url('/booking') }}" icon="fas fa-plus-circle" title="Ajukan Peminjaman"
-                        description="Buat permintaan peminjaman baru" />
-
-                    <x-quick-action href="{{ url('/laboratorium') }}" icon="fas fa-calendar-alt" title="Lihat Jadwal"
-                        description="Cek ketersediaan laboratorium" />
-
-                    <x-quick-action href="{{ url('/riwayat') }}" icon="fas fa-history" title="Riwayat"
-                        description="Lihat riwayat peminjaman" />
-                </div>
             </div>
 
             <!-- Recent Peminjaman -->

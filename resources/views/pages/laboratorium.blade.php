@@ -12,14 +12,19 @@
                     <p class="mt-2 text-gray-600">Daftar laboratorium yang tersedia</p>
                 </div>
                 <div class="mt-4 sm:mt-0 flex space-x-3">
-                    <a href="{{ route('quickbook.index') }}" class="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg flex items-center">
+                    <a href="{{ route("booking.form") }}"
+                        class="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg flex items-center">
+                        <i class="fas fa-calendar-plus mr-2"></i>
+                        Pinjam Sekarang
+                    </a>
+                    <a href="{{ route('quickbook.index') }}"
+                        class="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg flex items-center">
                         <i class="fas fa-magnifying-glass mr-2"></i>
                         Quick Book
                     </a>
                     @if (Auth::check() && Auth::user()->isAdmin())
                         <a href="{{ route('laboratorium.create') }}">
-                            <button
-                                class="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg flex items-center">
+                            <button class="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg flex items-center">
                                 <i class="fas fa-plus mr-2"></i>
                                 Tambah Lab
                             </button>
@@ -192,8 +197,7 @@
                                     </a>
                                     <button type="button"
                                         class="btn-delete flex-1 border border-primary text-primary text-center py-2 px-4 rounded-lg text-sm font-medium hover:bg-primary hover:text-white"
-                                        data-lab-id="{{ $lab->id_laboratorium }}"
-                                        data-lab-name="{{ $lab->nama_laboratorium }}">
+                                        data-lab-id="{{ $lab->id_laboratorium }}" data-lab-name="{{ $lab->nama_laboratorium }}">
                                         <i class="fas fa-trash mr-1"></i> Hapus
                                     </button>
                                 @endif
@@ -290,7 +294,7 @@
 
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             var labIdToDelete = null;
 
             // Set CSRF token untuk semua AJAX request
@@ -301,7 +305,7 @@
             });
 
             // Klik tombol Hapus → tampilkan modal
-            $(document).on('click', '.btn-delete', function() {
+            $(document).on('click', '.btn-delete', function () {
                 labIdToDelete = $(this).data('lab-id');
                 var labName = $(this).data('lab-name');
 
@@ -313,13 +317,13 @@
             });
 
             // Klik Batal → tutup modal
-            $('#cancelDelete').on('click', function() {
+            $('#cancelDelete').on('click', function () {
                 $('#deleteModal').removeClass('flex').addClass('hidden');
                 labIdToDelete = null;
             });
 
             // Klik Konfirmasi Hapus → kirim AJAX
-            $('#confirmDelete').on('click', function() {
+            $('#confirmDelete').on('click', function () {
                 if (!labIdToDelete) return;
 
                 // Tampilkan loading state
@@ -329,7 +333,7 @@
                 $.ajax({
                     url: '/laboratorium/' + labIdToDelete,
                     type: 'DELETE',
-                    success: function(response) {
+                    success: function (response) {
                         // Tutup modal
                         $('#deleteModal').removeClass('flex').addClass('hidden');
 
@@ -338,13 +342,13 @@
 
                         // Hapus card dari DOM
                         $(`[data-lab-id="${labIdToDelete}"]`).closest('.bg-white').fadeOut(300,
-                            function() {
+                            function () {
                                 $(this).remove();
                                 // Optional: reload halaman jika perlu
                                 // location.reload();
                             });
                     },
-                    error: function(xhr) {
+                    error: function (xhr) {
                         console.error('Error:', xhr);
 
                         // Reset button state
@@ -357,7 +361,7 @@
                         }
                         showAlert('error', errorMessage);
                     },
-                    complete: function() {
+                    complete: function () {
                         labIdToDelete = null;
                     }
                 });
@@ -374,26 +378,26 @@
                     '<i class="fas fa-exclamation-circle mr-2"></i>';
 
                 const alertHtml = `
-                    <div class="fixed top-4 right-4 ${alertClass} border px-6 py-4 rounded-lg shadow-lg z-50 fade-in">
-                        <div class="flex items-center">
-                            ${icon}
-                            <span>${message}</span>
-                        </div>
-                    </div>
-                `;
+                            <div class="fixed top-4 right-4 ${alertClass} border px-6 py-4 rounded-lg shadow-lg z-50 fade-in">
+                                <div class="flex items-center">
+                                    ${icon}
+                                    <span>${message}</span>
+                                </div>
+                            </div>
+                        `;
 
                 $('body').append(alertHtml);
 
                 // Auto remove setelah 5 detik
                 setTimeout(() => {
-                    $('.fade-in').fadeOut(300, function() {
+                    $('.fade-in').fadeOut(300, function () {
                         $(this).remove();
                     });
                 }, 5000);
             }
 
             // Tutup modal ketika klik di luar modal
-            $(document).on('click', function(e) {
+            $(document).on('click', function (e) {
                 if ($(e.target).attr('id') === 'deleteModal') {
                     $('#deleteModal').removeClass('flex').addClass('hidden');
                     labIdToDelete = null;

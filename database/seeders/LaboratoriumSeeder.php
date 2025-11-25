@@ -90,7 +90,7 @@ class LaboratoriumSeeder extends Seeder
 
         foreach ($laboratorium as $data) {
             Laboratorium::firstOrCreate(
-                ['nama_laboratorium' => $data['nama_laboratorium']], // cek berdasarkan nama
+                ['nama_laboratorium' => $data['nama_laboratorium']],
                 $data
             );
         }

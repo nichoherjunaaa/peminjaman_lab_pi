@@ -93,26 +93,6 @@
                     </div>
                 </div>
 
-                <!-- Rata-rata Penggunaan -->
-                {{-- <div class="bg-white overflow-hidden shadow rounded-lg card-hover">
-                    <div class="p-5">
-                        <div class="flex items-center">
-                            <div class="flex-shrink-0">
-                                <i class="fas fa-percentage text-secondary text-2xl"></i>
-                            </div>
-                            <div class="ml-5 w-0 flex-1">
-                                <dl>
-                                    <dt class="text-sm font-medium text-gray-500 truncate">Rata-rata Penggunaan</dt>
-                                    <dd>
-                                        <div class="text-lg font-medium text-gray-900">{{ $usageRate }}%</div>
-                                    </dd>
-                                </dl>
-                            </div>
-                        </div>
-                    </div>
-                </div> --}}
-
-                <!-- Lab Paling Populer -->
                 <div class="bg-white overflow-hidden shadow rounded-lg card-hover">
                     <div class="p-5">
                         <div class="flex items-center">

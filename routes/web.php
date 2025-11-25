@@ -28,9 +28,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/borrowing/{id}', [PeminjamanController::class, 'update'])->name('borrowing.update');
 
     Route::get('/laboratorium', [LaboratoriumController::class, 'index'])->name('laboratorium.index');
-    Route::get('/laboratorium-add', function () {
-        return view('pages.laboratorium-add');
-    })->name('laboratorium.create');
+    Route::get('/laboratorium-add', [LaboratoriumController::class, 'laboratorium_add'])->name('laboratorium.create');
     Route::post('/laboratorium/create', [LaboratoriumController::class, 'store'])->name('laboratorium.store');
     Route::get('/laboratorium/{id}', [LaboratoriumController::class, 'show'])->name('detail-laboratorium');
     Route::get('/laboratorium/{id}/booking', [LaboratoriumController::class, 'show_booking'])->name('booking-laboratorium');
@@ -45,12 +43,12 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/create/store', [PeminjamanController::class, 'store'])->name('peminjaman.store');
 
     // Report
-    Route::get('/report', [PeminjamanController::class, 'report'])->name('report');
     Route::get('/quickbook', [QuickBookController::class, 'index'])->name('quickbook.index');
     Route::post('/quickbook/search', [QuickBookController::class, 'search'])->name('quickbook.search');
     Route::get('/privacy', function () {
         return view('pages.privacy');
     });
+
 
     Route::get('/report', [ReportController::class, 'index'])->name('report');
     Route::get('/report/export-excel', [ReportController::class, 'exportExcel'])->name('report.export.excel');
